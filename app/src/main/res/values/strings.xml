@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ReMapV2</string>
+    
+    <string name="app_full_name">ReMAP - Remote Monitoring Application in Psychiatry</string>
+    <string name="app_uses">This app is used in the FOR 2107 study of the University of Münster.</string>
+
+    <string name="label_welcome">Welcome! 😃</string>
+    <string name="label_subject_id">Subject-ID:</string>
+    <string name="label_debug">Debug</string>
+    <string name="label_ok">OK</string>
+
+    <string name="hint_subject_id">Subject-ID</string>
+
+    <string name="content_on_boarding">
+        Please insert your subject ID. Your data will never be stored along with your name or other
+        personal data.\nThe ID cannot be changed afterwards.
+    </string>
+    <string name="content_contact_info">
+        If you have any questions or suggestions, please do not hesitate to
+        contact us.\nContact: hahnt[at]wwu.de
+    </string>
+
+
+    <string name="description_app_logo">App logo</string>
+
+    <string name="dummy_subject_id">A1234</string>
+
+</resources>

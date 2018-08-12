@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/space_16dp">
+
+    <TextView
+        android:id="@+id/prompt_input_subject_id_label_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/label_welcome"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_title"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/prompt_input_subject_id_content_on_boarding"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/prompt_input_subject_id_label_welcome"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/content_on_boarding"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_small_subtitle"
+        android:gravity="center"/>
+
+    <EditText
+        android:id="@+id/prompt_input_subject_id_et_subject_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/prompt_input_subject_id_content_on_boarding"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/space_15dp"
+        android:inputType="text"
+        android:hint="@string/hint_subject_id"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/text_subtitle"/>
+
+    <TextView
+        android:id="@+id/prompt_input_subject_id_txt_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/prompt_input_subject_id_et_subject_id"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/space_15dp"
+        android:paddingLeft="@dimen/space_15dp"
+        android:paddingRight="@dimen/space_15dp"
+        android:text="@string/label_ok"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/text_title"
+        android:textStyle="bold"/>
+</android.support.constraint.ConstraintLayout>
