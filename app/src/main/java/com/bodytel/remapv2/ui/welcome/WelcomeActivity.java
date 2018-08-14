@@ -1,5 +1,6 @@
-package com.bodytel.remapv2;
+package com.bodytel.remapv2.ui.welcome;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bodytel.remapv2.R;
+import com.bodytel.remapv2.ui.debug.DebugActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -26,7 +30,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     public void onClickDebug(View view){
-        Toast.makeText(this, "Debug", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Debug", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(this, DebugActivity.class));
     }
 
     private void inputSubjectId(){
