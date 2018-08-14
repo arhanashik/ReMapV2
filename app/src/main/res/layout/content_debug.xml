@@ -1,11 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.debug.DebugActivity"
     tools:showIn="@layout/activity_debug">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/space_16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/space_10dp"
+            android:text="@string/hint_subject_id"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/activity_debug_txt_subject_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/space_10dp"
+            tools:text="@string/dummy_subject_id"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_title"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/activity_debug_txt_subject_id"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_steps"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_steps"
+                android:onClick="onClickSteps"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_distance"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_distance"
+                android:onClick="onClickDistance"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_new_audio_sample"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_new_audio_sample"
+                android:onClick="onClickNewAudioSample"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_audio_samples"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_audio_samples"
+                android:onClick="onClickAudioSamples"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_new_bdi_survey"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_new_bdi_survey"
+                android:onClick="onClickNewBdiSurvey"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_accelerometer_data"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_accelerometer_data"
+                android:onClick="onClickAccelerometerData"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_new_sleep_entry"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_new_sleep_entry"
+                android:onClick="onClickNewSleepEntry"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_new_mood_entry"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_new_mood_entry"
+                android:onClick="onClickNewMoodEntry"/>
+
+            <include layout="@layout/divider"/>
+
+            <TextView
+                android:id="@+id/activity_debug_txt_schedule_notifications"
+                style="@style/TextView.DebugOptions"
+                android:text="@string/label_schedule_notifications"
+                android:onClick="onClickScheduleNotification"/>
+
+            <include layout="@layout/divider"/>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -12,11 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
+import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
+import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.debug.DebugActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 
     private TextView txtSubjectId;
+
+    private PrefGlobal prefGlobal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +30,13 @@ public class WelcomeActivity extends AppCompatActivity {
 
         txtSubjectId = findViewById(R.id.txt_subject_id);
 
-        inputSubjectId();
+        prefGlobal = PrefHelper.providePrefGlobal();
+
+        String subjectId = prefGlobal.getSubjectId();
+        if(TextUtils.isEmpty(subjectId)) inputSubjectId();
+        else {
+            txtSubjectId.setText(subjectId);
+        }
     }
 
     public void onClickDebug(View view){
@@ -55,6 +65,7 @@ public class WelcomeActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(subjectId))
                     Toast.makeText(WelcomeActivity.this, "Please, insert a valid subject ID", Toast.LENGTH_SHORT).show();
                 else {
+                    prefGlobal.setSubjectId(subjectId);
                     txtSubjectId.setText(subjectId);
                     dialog.dismiss();
                 }

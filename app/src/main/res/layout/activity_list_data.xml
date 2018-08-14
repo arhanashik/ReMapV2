@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.debug.DebugActivity">
+    tools:context=".ui.listdata.ListDataActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,6 +20,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_debug" />
+    <include layout="@layout/content_list_data" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -24,7 +24,16 @@
         <activity
             android:name=".ui.debug.DebugActivity"
             android:label="@string/title_activity_debug"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.listdata.ListDataActivity"
+            android:label="@string/title_activity_list_data"
+            android:parentActivityName=".ui.debug.DebugActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bodytel.remapv2.ui.debug.DebugActivity" />
+        </activity>
     </application>
 
 </manifest>
