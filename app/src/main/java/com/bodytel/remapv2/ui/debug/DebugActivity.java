@@ -13,6 +13,7 @@ import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
+import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyActivity;
 import com.bodytel.remapv2.ui.listdata.ListDataActivity;
 
 public class DebugActivity extends AppCompatActivity {
@@ -73,7 +74,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     public void onClickNewBdiSurvey(View view){
-
+        startActivity(new Intent(this, BdiSurveyActivity.class));
     }
 
     public void onClickAccelerometerData(View view){

@@ -1,0 +1,385 @@
+{
+   "quizzes":[
+      {
+         "sl":1,
+         "title":"A",
+         "options":[
+            {
+               "1": "Ich bin nicht traurig."
+            },
+            {
+               "2":"Ich bin traurig."
+            },
+            {
+               "3": "Ich bin die ganze Zeit traurig und komme nicht davon los."
+            },
+            {
+               "4":"Ich bin so traurig oder unglücklich, dass ich es kaum noch ertrage."
+            }
+         ]
+      },
+      {
+         "sl":2,
+         "title":"B",
+         "options":[
+            {
+               "1":"Ich sehe nicht besonders mutlos in die Zukunft."
+            },
+            {
+               "2": "Ich sehe mutlos in die Zukunft."
+            },
+            {
+               "3": "Ich habe nichts, worauf ich mich freuen kann."
+            },
+            {
+               "4":"Ich habe das Gefühl, dass die Zukunft hoffnungslos ist, und dass die Situation nicht besser werden kann."
+            }
+         ]
+      },
+      {
+         "sl":3,
+         "title":"C",
+         "options":[
+            {
+               "1": "Ich fühle mich nicht als Versager."
+            },
+            {
+               "2": "Ich habe das Gefühl, öfter versagt zu haben als der Durchschnitt."
+            },
+            {
+               "3": "Wenn ich auf mein Leben zurückblicke, sehe ich bloß eine Menge Fehlschläge."
+            },
+            {
+               "4":"Ich habe das Gefühl, als Mensch ein völliger Versager zu sein."
+            }
+         ]
+      },
+      {
+         "sl":4,
+         "title":"D",
+         "options":[
+            {
+               "1": "Ich kann die Dinge genauso genießen wie früher."
+            },
+            {
+               "2": "Ich kann die Dinge nicht mehr so genießen wie früher."
+            },
+            {
+               "3": "Ich kann aus nichts mehr eine echte Befriedigung ziehen."
+            },
+            {
+               "4":"Ich bin mit allem unzufrieden oder gelangweilt."
+            }
+         ]
+      },
+      {
+         "sl":5,
+         "title":"E",
+         "options":[
+            {
+               "1": "Ich habe keine Schuldgefühle."
+            },
+            {
+               "2": "Ich habe häufig Schuldgefühle."
+            },
+            {
+               "3": "Ich habe fast immer Schuldgefühle."
+            },
+            {
+               "4":"Ich habe immer Schuldgefühle."
+            }
+         ]
+      },
+      {
+         "sl":6,
+         "title":"F",
+         "options":[
+            {
+               "1": "Ich habe nicht das Gefühl, bestraft zu sein."
+            },
+            {
+               "2": "Ich habe das Gefühl, vielleicht bestraft zu werden."
+            },
+            {
+               "3": "Ich erwarte, bestraft zu werden."
+            },
+            {
+               "4":"Ich habe das Gefühl, bestraft zu sein."
+            }
+         ]
+      },
+      {
+         "sl":7,
+         "title":"G",
+         "options":[
+            {
+               "1": "Ich bin nicht von mir enttäuscht."
+            },
+            {
+               "2": "Ich bin von mir enttäuscht."
+            },
+            {
+               "3": "Ich finde mich fürchterlich."
+            },
+            {
+               "4":"Ich hasse mich."
+            }
+         ]
+      },
+      {
+         "sl":8,
+         "title":"H",
+         "options":[
+            {
+               "1": "Ich habe nicht das Gefühl, schlechter zu sein als die anderen."
+            },
+            {
+               "2": "Ich kritisiere mich wegen meiner Fehler und Schwächen."
+            },
+            {
+               "3": "Ich mache mir die ganze Zeit Vorwürfe wegen meiner Mängel."
+            },
+            {
+               "4":"Ich gebe mir für alles die Schuld, was schiefgeht."
+            }
+         ]
+      },
+      {
+         "sl":9,
+         "title":"I",
+         "options":[
+            {
+               "1": "Ich denke nicht daran, mir etwas anzutun."
+            },
+            {
+               "2": "Ich denke manchmal an Selbstmord, aber ich würde es nicht tun."
+            },
+            {
+               "3": "Ich möchte mich am liebsten umbringen."
+            },
+            {
+               "4":"Ich würde mich umbringen, wenn ich die Gelegenheit hätte."
+            }
+         ]
+      },
+      {
+         "sl":10,
+         "title":"J",
+         "options":[
+           {
+             "1": "Ich weine nicht öfter als früher."
+           },
+           {
+             "2": "Ich weine jetzt mehr als früher."
+           },
+           {
+             "3": "Ich weine jetzt die ganze Zeit."
+           },
+           {
+               "4":"Früher konnte ich weinen, aber jetzt kann ich es nicht mehr, obwohl ich es möchte."
+            }
+         ]
+      },
+      {
+         "sl":11,
+         "title":"K",
+         "options":[
+           {
+             "1": "Ich bin nicht reizbarer als sonst."
+           },
+           {
+             "2": "Ich bin jetzt leichter verärgert oder gereizt als früher."
+           },
+           {
+             "3": "Ich fühle mich dauernd gereizt."
+           },
+           {
+               "4":"Die Dinge, die mich früher geärgert haben, berühren mich nicht mehr."
+            }
+         ]
+      },
+      {
+         "sl":12,
+         "title":"L",
+         "options":[
+           {
+             "1": "Ich habe nicht das Interesse an Menschen verloren."
+           },
+           {
+             "2": "Ich interessiere mich jetzt weniger für Menschen als früher."
+           },
+           {
+             "3": "Ich habe mein Interesse an anderen Menschen zum größten Teil verloren."
+           },
+           {
+               "4":"Ich habe mein ganzes Interesse an anderen Menschen verloren."
+            }
+         ]
+      },
+      {
+         "sl":13,
+         "title":"M",
+         "options":[
+           {
+             "1": "Ich bin so entschlussfreudig wie immer."
+           },
+           {
+             "2": "Ich schiebe Erledigungen jetzt öfter als früher auf."
+           },
+           {
+             "3": "Es fällt mir jetzt schwerer als früher, Entscheidungen zu treffen."
+           },
+           {
+               "4":"Ich kann überhaupt keine Entscheidungen mehr treffen."
+            }
+         ]
+      },
+      {
+         "sl":14,
+         "title":"N",
+         "options":[
+           {
+             "1": "Ich habe nicht das Gefühl, schlechter auszusehen als früher."
+           },
+           {
+             "2": "Ich mache mir Sorgen, dass ich alt oder unattraktiv aussehe."
+           },
+           {
+             "3": "Ich habe das Gefühl, dass Veränderungen in meinem Aussehen eintreten, die mich hässlich machen."
+           },
+           {
+               "4":"Ich finde mich hässlich."
+            }
+         ]
+      },
+      {
+         "sl":15,
+         "title":"O",
+         "options":[
+           {
+             "1": "Ich kann so gut arbeiten wie früher."
+           },
+           {
+             "2": "Ich muss mir einen Ruck geben, bevor ich eine Tätigkeit in Angriff nehme."
+           },
+           {
+             "3": "Ich muss mich zu jeder Tätigkeit zwingen."
+           },
+           {
+               "4":"Ich bin unfähig zu arbeiten."
+            }
+         ]
+      },
+      {
+         "sl":16,
+         "title":"P",
+         "options":[
+           {
+             "1": "Ich schlafe so gut wie sonst."
+           },
+           {
+             "2": "Ich schlafe nicht mehr so gut wie früher."
+           },
+           {
+             "3": "Ich wache 1 bis 2 Stunden früher auf als sonst, und es fällt mir schwer, wieder einzuschlafen,"
+           },
+           {
+               "4":"Ich wache mehrere Stunden früher auf als sonst und kann nicht mehr einschlafen."
+            }
+         ]
+      },
+      {
+         "sl":17,
+         "title":"Q",
+         "options":[
+           {
+             "1": "Ich ermüde nicht stärker als sonst."
+           },
+           {
+             "2": "Ich ermüde schneller als früher."
+           },
+           {
+             "3": "Fast alles ermüdet mich."
+           },
+           {
+               "4":"Ich bin zu müde, um etwas zu tun."
+            }
+         ]
+      },
+      {
+         "sl":18,
+         "title":"R",
+         "options":[
+           {
+             "1": "Mein Appetit ist nicht schlechter als sonst."
+           },
+           {
+             "2": "Mein Appetit ist nicht mehr so gut wie früher."
+           },
+           {
+             "3": "Mein Appetit hat sehr stark nachgelassen."
+           },
+           {
+               "4":"Ich habe überhaupt keinen Appetit mehr."
+            }
+         ]
+      },
+      {
+         "sl":19,
+         "title":"S",
+         "options":[
+           {
+             "1": "Ich habe in letzter Zeit kaum abgenommen."
+           },
+           {
+             "2": "Ich habe mehr als 2 Kilo abgenommen."
+           },
+           {
+             "3": "Ich habe mehr als 5 Kilo abgenommen."
+           },
+           {
+             "4": "Ich habe mehr als 8 Kilo abgenommen."
+           },
+           {
+               "5":"Ich esse absichtlich weniger, um abzunehmen:Ja,Nein"
+            }
+         ]
+      },
+      {
+         "sl":20,
+         "title":"T",
+         "options":[
+           {
+             "1": "Ich mache mir keine größeren Sorgen um meine Gesundheit als sonst."
+           },
+           {
+             "2": "Ich mache mir Sorgen über körperliche Probleme, wie Schmerzen, Magenbeschwerden oder Verstopfung."
+           },
+           {
+             "3": "Ich mache mir so große Sorgen über gesundheitliche Probleme, dass es mir schwerfällt, an etwas anderes zu denken."
+           },
+           {
+               "4":"Ich mache mir so große Sorgen über gesundheitliche Probleme, dass ich an nichts anderes mehr denken kann."
+            }
+         ]
+      },
+      {
+         "sl":21,
+         "title":"U",
+         "options":[
+           {
+             "1": "Ich habe in letzter Zeit keine Veränderung meines Interesses an Sex bemerkt."
+           },
+           {
+             "2": "Ich interessiere mich weniger für Sex als früher."
+           },
+           {
+             "3": "Ich interessiere mich jetzt viel weniger für Sex."
+           },
+           {
+               "4":"Ich habe das Interesse an Sex völlig verloren."
+            }
+         ]
+      }
+   ]
+}
