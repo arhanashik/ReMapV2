@@ -3,6 +3,8 @@
 buildscript {
     ext.kotlin_version = '1.2.50'
     ext.anko_version='0.10.5'
+    ext.google_play_services_library='11.6.0'
+    ext.google_support_library='27.1.1'
 
     repositories {
         google()

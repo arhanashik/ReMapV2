@@ -9,47 +9,41 @@ import android.widget.TextView;
 
 import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.listdata.ListDataModel;
+import com.bodytel.remapv2.data.local.listdata.StepModel;
+import com.bodytel.remapv2.ui.base.BaseAdapter;
+import com.bodytel.remapv2.ui.base.BaseViewHolder;
 
 import java.util.List;
 
-public class ListDataAdapter extends RecyclerView.Adapter<ListDataAdapter.ListDataViewHolder>{
-    private List<ListDataModel> mDataModels;
+public class ListDataAdapter extends BaseAdapter<StepModel>{
 
-    ListDataAdapter(List<ListDataModel> dataModels){
-        mDataModels = dataModels;
-    }
-
-    @NonNull
     @Override
-    public ListDataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public boolean isEqual(StepModel left, StepModel right) {
+        return false;
+    }
+    @Override
+    public BaseViewHolder newViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
         return new ListDataViewHolder(inflater.inflate(R.layout.item_list_data, parent, false));
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ListDataViewHolder holder, int position) {
-        holder.bind(mDataModels.get(position));
-    }
 
-    @Override
-    public int getItemCount() {
-        return mDataModels.size();
-    }
-
-    class ListDataViewHolder extends RecyclerView.ViewHolder{
-        TextView txtData, txtDate;
-
+    class ListDataViewHolder extends BaseViewHolder<StepModel>{
+        private TextView txtData, txtDate;
         ListDataViewHolder(View itemView) {
             super(itemView);
-
             txtData = itemView.findViewById(R.id.item_list_data_txt_data);
             txtDate = itemView.findViewById(R.id.item_list_data_txt_date);
         }
+        @Override
+        public void bind(StepModel item) {
+            txtData.setText(item.getStartData());
+            txtDate.setText(item.getEndTate());
+        }
 
-        void bind(ListDataModel dataModel){
-            txtData.setText(dataModel.getData());
-            txtDate.setText(dataModel.getDate());
+        @Override
+        public void onClick(View v) {
+
         }
     }
 }
