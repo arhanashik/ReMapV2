@@ -35,7 +35,7 @@
                 android:value="com.bodytel.remapv2.ui.debug.DebugActivity" />
         </activity>
         <activity android:name=".ui.bdisurvey.BdiSurveyActivity"
-            android:label="@string/title_activity_quiz"
+            android:label="@string/title_activity_survey"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".ui.debug.DebugActivity"/>
     </application>

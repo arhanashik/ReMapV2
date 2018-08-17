@@ -50,7 +50,7 @@ class BdiSurveyActivity : AppCompatActivity() {
         //viewPager.currentItem = pagerAdapterBdi.count / 2
 
         btnEndQuiz.setOnClickListener {
-            closeQuiz(quizzes.size - answers.size)
+            closeSurvey(quizzes.size - answers.size)
         }
     }
 
@@ -63,19 +63,19 @@ class BdiSurveyActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.action_skip ->{
-                closeQuiz(quizzes.size - answers.size)
+                closeSurvey(quizzes.size - answers.size)
             }
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    private fun closeQuiz(remaining: Int){
+    private fun closeSurvey(remaining: Int){
         var message = "Are you surely want to finish?"
-        if(remaining > 0) message += " You haven't answered $remaining quizzes."
+        if(remaining > 0) message += " You haven't finished $remaining steps."
 
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Stop Quiz")
+        builder.setTitle("Stop Survey")
                 .setMessage(message)
                 .setPositiveButton("YES"){dialog, which ->
                     val intent = Intent(this, DebugActivity:: class.java)

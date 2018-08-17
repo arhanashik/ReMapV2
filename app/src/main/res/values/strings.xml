@@ -5,7 +5,7 @@
     <string name="app_uses">This app is used in the FOR 2107 study of the University of Münster.</string>
 
     <string name="title_activity_debug">ReMAP</string>
-    <string name="title_activity_quiz">Quiz</string>
+    <string name="title_activity_survey">ReMAP</string>
     <string name="title_activity_list_data">ReMAP</string>
 
     <string name="label_welcome">Welcome! 😃</string>
