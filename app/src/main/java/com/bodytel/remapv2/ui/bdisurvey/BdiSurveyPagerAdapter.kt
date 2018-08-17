@@ -11,6 +11,9 @@ class BdiSurveyPagerAdapter(fragmentManager: FragmentManager, private val survey
         FragmentStatePagerAdapter(fragmentManager) {
 
     override fun getItem(position: Int): Fragment {
+        if(position == 0) return BdiSurveyStartFragment.newInstance()
+        else if(position == count-1) return BdiSurveyEndFragment.newInstance()
+
         return BdiSurveyFragment.newInstance(surveyItems[position])
         //return BdiSurveyFragment.newInstance(surveyItems[position % surveyItems.size])
     }
@@ -21,6 +24,6 @@ class BdiSurveyPagerAdapter(fragmentManager: FragmentManager, private val survey
     }
 
     override fun getPageTitle(position: Int): CharSequence {
-        return "Step " + surveyItems[position % surveyItems.size].sl.toString() + " of " + surveyItems.size
+        return "Step " + (surveyItems[position % surveyItems.size].sl + 1).toString() + " of " + surveyItems.size
     }
 }

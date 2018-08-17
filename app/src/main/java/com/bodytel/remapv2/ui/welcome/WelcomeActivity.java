@@ -66,6 +66,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     Toast.makeText(WelcomeActivity.this, "Please, insert a valid subject ID", Toast.LENGTH_SHORT).show();
                 else {
                     prefGlobal.setSubjectId(subjectId);
+                    prefGlobal.setBdiVersion("1.0");
                     txtSubjectId.setText(subjectId);
                     dialog.dismiss();
                 }

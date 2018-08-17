@@ -16,6 +16,8 @@
     <string name="hint_subject_id">Subject-ID</string>
 
     <string name="action_skip">SKIP</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_done">Done</string>
 
     <string name="content_on_boarding">
         Please insert your subject ID. Your data will never be stored along with your name or other
@@ -25,8 +27,15 @@
         If you have any questions or suggestions, please do not hesitate to
         contact us.\nContact: hahnt[at]wwu.de
     </string>
+    <string name="content_bdi_survey">
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+        been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took
+        a galley of type and scrambled it to make a type specimen book. It has survived not only five
+        centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    </string>
 
     <string name="description_app_logo">App logo</string>
+    <string name="description_ic_done">Done Icon</string>
 
     <string name="label_done">Done</string>
     <string name="label_steps">Steps</string>
@@ -38,6 +47,12 @@
     <string name="label_new_sleep_entry">New sleep entry</string>
     <string name="label_new_mood_entry">New mood entry</string>
     <string name="label_schedule_notifications">Schedule notifications</string>
+    <string name="label_bdi">BDI</string>
+    <string name="label_get_started">Get Started</string>
+    <string name="label_activity_completed">Activity completed</string>
+    <string name="label_activity_not_completed">Activity not completed</string>
+    <string name="label_thanks">Thanks a lot!</string>
+    <string name="label_hint_to_complete_activity">Answer all questions for completing the activity</string>
 
     <string name="dummy_data">8.00</string>
     <string name="dummy_date">01.08.18, 08:38</string>

@@ -6,4 +6,11 @@ public interface AppConst {
     int TYPE_DISTANCE = 2;
     int TYPE_AUDIO_SAMPLE = 3;
     int TYPE_ACCELEROMETER_DATA = 4;
+
+    String COLLECTION_SURVEY_DATA = "survey_data";
+
+    String SUBJECT_ID = "subjectId";
+    String CREATED_AT = "createdAt";
+    String BDI_VERSION = "bdiVersion";
+    String ANSWERS = "answers";
 }

@@ -7,28 +7,31 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-object QuizHelper {
+object SurveyHelper {
 
-  const val KEY_ARRAY = "quizzes"
+  const val KEY_ARRAY = "surveyQuestions"
   const val KEY_SL = "sl"
   const val KEY_TITLE = "title"
   const val KEY_OPTIONS = "options"
   const val KEY_ANSWER = "answer"
 
-  fun getQuizzesFromJson(fileName: String, context: Context): List<SurveyItemModel> {
-        val quizzes = ArrayList<SurveyItemModel>()
+  fun getSurveyQuestionsFromJson(fileName: String, context: Context): List<SurveyItemModel> {
+        val surveyQuestionsList = ArrayList<SurveyItemModel>()
 
         try {
 
             // Load the JSONArray from the file
             val jsonString = loadJsonFromFile(fileName, context)
             val json = JSONObject(jsonString)
-            val jsonQuizzes = json.getJSONArray(KEY_ARRAY)
+            val jsonSurveyQuestions = json.getJSONArray(KEY_ARRAY)
 
-            for (index in 0 until jsonQuizzes.length()) {
-                val obj = jsonQuizzes.getJSONObject(index) as JSONObject
+            //this item is dummy and is added for showing the start screen
+            surveyQuestionsList.add(SurveyItemModel(0, "Let's start", ArrayList<String>(), ""))
+
+            for (index in 0 until jsonSurveyQuestions.length()) {
+                val obj = jsonSurveyQuestions.getJSONObject(index) as JSONObject
                 val sl = obj.getInt(KEY_SL)
-                val title = jsonQuizzes.getJSONObject(index).getString(KEY_TITLE)
+                val title = jsonSurveyQuestions.getJSONObject(index).getString(KEY_TITLE)
 
                 val optionsArr = obj.getJSONArray(KEY_OPTIONS)
                 val options = ArrayList<String>()
@@ -36,14 +39,18 @@ object QuizHelper {
                     options.add(optionsArr.getJSONObject(i).getString((i+1).toString()))
                 }
 
-                quizzes.add(SurveyItemModel(sl, title, options, ""))
+                surveyQuestionsList.add(SurveyItemModel(sl, title, options, ""))
             }
+
+            //this item is dummy and is added for showing the end screen
+            surveyQuestionsList.add(SurveyItemModel(surveyQuestionsList.size, "Let's End", ArrayList<String>(), ""))
+
         } catch (e: JSONException) {
-            Log.d(QuizHelper.javaClass.simpleName, e.toString())
-            return quizzes
+            Log.d(SurveyHelper.javaClass.simpleName, e.toString())
+            return surveyQuestionsList
         }
 
-    return quizzes
+    return surveyQuestionsList
   }
 
   private fun loadJsonFromFile(filename: String, context: Context): String {
