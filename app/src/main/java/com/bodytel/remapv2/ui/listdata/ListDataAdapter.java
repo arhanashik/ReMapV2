@@ -13,7 +13,12 @@ import com.bodytel.remapv2.data.local.listdata.StepModel;
 import com.bodytel.remapv2.ui.base.BaseAdapter;
 import com.bodytel.remapv2.ui.base.BaseViewHolder;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class ListDataAdapter extends BaseAdapter<StepModel>{
 
@@ -29,16 +34,19 @@ public class ListDataAdapter extends BaseAdapter<StepModel>{
 
 
     class ListDataViewHolder extends BaseViewHolder<StepModel>{
-        private TextView txtData, txtDate;
+        private TextView stepCount, dateValue;
         ListDataViewHolder(View itemView) {
             super(itemView);
-            txtData = itemView.findViewById(R.id.item_list_data_txt_data);
-            txtDate = itemView.findViewById(R.id.item_list_data_txt_date);
+            stepCount = itemView.findViewById(R.id.fit_count);
+            dateValue = itemView.findViewById(R.id.fit_time);
         }
         @Override
         public void bind(StepModel item) {
-            txtData.setText(item.getStartData());
-            txtDate.setText(item.getEndTate());
+            stepCount.setText(item.getStepCount());
+
+            String datevalue = getDate(item.getEndTate())+", "+getOnlyTime(item.getEndTate());
+
+            dateValue.setText(datevalue);
         }
 
         @Override
@@ -46,4 +54,19 @@ public class ListDataAdapter extends BaseAdapter<StepModel>{
 
         }
     }
+
+    private String getOnlyTime(long milliSeconds){
+        Date date = new Date(milliSeconds);
+        DateFormat format = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
+        format.setTimeZone(TimeZone.getDefault());
+        return format.format(date);
+    }
+
+    private String getDate(long milliSeconds) {
+        Date date = new Date(milliSeconds);
+        DateFormat format = new SimpleDateFormat("MM-dd-yyyy", Locale.getDefault());
+        format.setTimeZone(TimeZone.getDefault());
+        return format.format(date);
+    }
+
 }

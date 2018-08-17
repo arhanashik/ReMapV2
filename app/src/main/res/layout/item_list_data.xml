@@ -8,7 +8,7 @@
     android:paddingBottom="@dimen/space_5dp">
 
     <TextView
-        android:id="@+id/item_list_data_txt_data"
+        android:id="@+id/fit_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/space_10dp"
@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/item_list_data_txt_date"
+        android:id="@+id/fit_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/space_10dp"
@@ -35,5 +35,5 @@
         android:layout_marginTop="@dimen/space_5dp"
         android:layout_marginBottom="@dimen/space_5dp"
         android:background="@color/colorGrey"
-        app:layout_constraintTop_toBottomOf="@+id/item_list_data_txt_data"/>
+        app:layout_constraintTop_toBottomOf="@+id/fit_count"/>
 </android.support.constraint.ConstraintLayout>

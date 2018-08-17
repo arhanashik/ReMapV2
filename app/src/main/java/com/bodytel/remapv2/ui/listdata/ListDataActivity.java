@@ -288,8 +288,8 @@ public class ListDataActivity extends AppCompatActivity {
 
         for (DataPoint dp : dataSet.getDataPoints()) {
 
-            String startDate = dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS));
-            String endDate = dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS));
+            long startDate = dp.getStartTime(TimeUnit.MILLISECONDS);
+            long endDate = dp.getEndTime(TimeUnit.MILLISECONDS);
             String value = "";
             List<Field> fields = dp.getDataType().getFields();
             for (Field item : fields) {

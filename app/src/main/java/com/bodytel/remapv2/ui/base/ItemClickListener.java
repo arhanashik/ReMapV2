@@ -13,7 +13,7 @@ import android.view.View;
 * *
 * * Purpose: In Recycler view, to get click events, you have to implement in this interface
 * *
-* * Last Edited by : SUDIPTA KUMAR PAIK on 03/16/18.
+* *
 * * History:
 * * 1:
 * * 2:

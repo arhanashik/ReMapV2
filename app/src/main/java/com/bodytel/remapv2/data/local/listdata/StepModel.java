@@ -15,10 +15,10 @@ package com.bodytel.remapv2.data.local.listdata;
 
 public class StepModel {
     private String stepCount;
-    private String startData;
-    private String endTate;
+    private long startData;
+    private long endTate;
 
-    public StepModel(String stepCount, String startData, String endTate) {
+    public StepModel(String stepCount, long startData, long endTate) {
         this.stepCount = stepCount;
         this.startData = startData;
         this.endTate = endTate;
@@ -32,19 +32,19 @@ public class StepModel {
         this.stepCount = stepCount;
     }
 
-    public String getStartData() {
+    public long getStartData() {
         return startData;
     }
 
-    public void setStartData(String startData) {
+    public void setStartData(long startData) {
         this.startData = startData;
     }
 
-    public String getEndTate() {
+    public long getEndTate() {
         return endTate;
     }
 
-    public void setEndTate(String endTate) {
+    public void setEndTate(long endTate) {
         this.endTate = endTate;
     }
 }

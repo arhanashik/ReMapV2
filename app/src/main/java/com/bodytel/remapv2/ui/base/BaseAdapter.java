@@ -19,7 +19,7 @@ import java.util.List;
  * *
  * * Purpose: Abstract Base Adapter that every Adapter in this application must extends.
  * *
- * * Last Edited by : SUDIPTA KUMAR PAIK on 03/16/18.
+ * *
  * * History:
  * * 1:
  * * 2:

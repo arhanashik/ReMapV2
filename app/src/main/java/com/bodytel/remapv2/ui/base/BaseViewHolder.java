@@ -14,7 +14,7 @@ import android.view.View;
  * *
  * * Purpose: Child view holder class inherit this class
  * *
- * * Last Edited by : SUDIPTA KUMAR PAIK on 03/16/18.
+ * *
  * * History:
  * * 1:
  * * 2:
