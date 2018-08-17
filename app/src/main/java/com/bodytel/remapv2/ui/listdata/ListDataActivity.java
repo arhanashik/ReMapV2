@@ -269,20 +269,20 @@ public class ListDataActivity extends AppCompatActivity {
             for (Bucket bucket : dataReadResult.getBuckets()) {
                 List<DataSet> dataSets = bucket.getDataSets();
                 for (DataSet dataSet : dataSets) {
-                    ShowDataSet(dataSet);
+                    showDataSet(dataSet);
                 }
             }
         } else if (dataReadResult.getDataSets().size() > 0) {
             Log.i(TAG, "Number of returned DataSets is: " + dataReadResult.getDataSets().size());
             for (DataSet dataSet : dataReadResult.getDataSets()) {
-                ShowDataSet(dataSet);
+                showDataSet(dataSet);
             }
         }
         // [END parse_read_data_result]
     }
 
     // [START parse_dataset]
-    private void ShowDataSet(DataSet dataSet) {
+    private void showDataSet(DataSet dataSet) {
         Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
         DateFormat dateFormat = getTimeInstance();
 
