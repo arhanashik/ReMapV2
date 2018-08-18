@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "135325024643",
+    "firebase_url": "https://remap-12940.firebaseio.com",
+    "project_id": "remap-12940",
+    "storage_bucket": "remap-12940.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135325024643:android:2f6e36a26cbe5722",
+        "android_client_info": {
+          "package_name": "com.bodytel.remapv2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135325024643-176ihc1mngdq1hj2815s3s4i6f5ah3ko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwbkrFMjuoXhoZFM89KpCUY67WdZuLJLI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
