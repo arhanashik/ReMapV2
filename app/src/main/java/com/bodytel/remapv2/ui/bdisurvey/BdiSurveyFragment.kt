@@ -19,33 +19,32 @@ class BdiSurveyFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState:
     Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.fragment_quiz, container, false)
+        val view = inflater.inflate(R.layout.fragment_survey, container, false)
 
         tvQuestion = view.findViewById(R.id.txt_question)
         rgAnswers = view.findViewById(R.id.rg_answers)
 
         val args = arguments
         if (args != null) {
-            val quiz = args.get("quiz") as SurveyItemModel
+            val surveyItemModel = args.get("surveyItemModel") as SurveyItemModel
 
-            tvQuestion.text = quiz.question
-            for (i in quiz.options.indices) {
+            tvQuestion.text = surveyItemModel.question
+            for (i in surveyItemModel.options.indices) {
                 val rb = RadioButton(context)
                 rb.id = View.generateViewId()
                 rb.setPadding(10, 30, 0, 30)
-                val option = quiz.options.get(i)
+                val option = surveyItemModel.options.get(i)
                 rb.textSize = 18f
                 if(option.length>60) rb.textSize = 17f
                 if(option.length>80) rb.textSize = 16f
                 rb.text = option
                 rgAnswers.addView(rb)
-                if(BdiSurveyActivity.answers.containsValue(option)) rb.isChecked = true
+                if(BdiSurveyActivity.answers.get(surveyItemModel.question) == surveyItemModel.options.indexOf(option)) rb.isChecked = true
 
-                rgAnswers.setOnCheckedChangeListener({
-                    group, checkedId ->
+                rgAnswers.setOnCheckedChangeListener { group, checkedId ->
                     val radio: RadioButton = group.findViewById(checkedId)
-                    BdiSurveyActivity.onAnswered(quiz.question, radio.text.toString())
-                })
+                    BdiSurveyActivity.onAnswered(surveyItemModel.question, surveyItemModel.options.indexOf(radio.text.toString()))
+                }
             }
         }
 
@@ -53,10 +52,10 @@ class BdiSurveyFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(quiz: SurveyItemModel): BdiSurveyFragment {
+        fun newInstance(surveyItemModel: SurveyItemModel): BdiSurveyFragment {
 
             val args = Bundle()
-            args.putSerializable("quiz", quiz)
+            args.putSerializable("surveyItemModel", surveyItemModel)
 
             val fragment = BdiSurveyFragment()
             fragment.arguments = args

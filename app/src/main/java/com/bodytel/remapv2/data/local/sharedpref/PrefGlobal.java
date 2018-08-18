@@ -16,14 +16,24 @@ public class PrefGlobal {
     }
 
     public void setSubjectId(String subjectId){
-        mEditor = mPreferences.edit();
-        mEditor.putString(PrefProp.SUBJECT_ID, subjectId);
-        mEditor.apply();
+        mPreferences.edit()
+                .putString(PrefProp.SUBJECT_ID, subjectId)
+                .apply();
+    }
+
+    public String getBdiVersion(){
+        return mPreferences.getString(PrefProp.BDI_VERSION, "");
+    }
+
+    public void setBdiVersion(String bdiVersion){
+        mPreferences.edit()
+                .putString(PrefProp.BDI_VERSION, bdiVersion)
+                .apply();
     }
 
     public void clearAll(){
-        mEditor = mPreferences.edit();
-        mEditor.clear();
-        mEditor.apply();
+        mPreferences.edit()
+                .clear()
+                .apply();
     }
 }
