@@ -204,7 +204,7 @@ public class ListDataActivity extends AppCompatActivity {
                                 // For the sake of the sample, we'll print the data so we can see what we just
                                 // added. In general, logging fitness information should be avoided for privacy
                                 // reasons.
-                                printData(dataReadResponse);
+                                getDataFromResult(dataReadResponse);
                             }
                         })
                 .addOnFailureListener(
@@ -260,7 +260,7 @@ public class ListDataActivity extends AppCompatActivity {
      * better option would be to dump the data you receive to a local data directory to avoid exposing
      * it to other applications.
      */
-    public void printData(DataReadResponse dataReadResult) {
+    public void getDataFromResult(DataReadResponse dataReadResult) {
         // [START parse_read_data_result]
         // If the DataReadRequest object specified aggregated data, dataReadResult will be returned
         // as buckets containing DataSets, instead of just DataSets.
@@ -301,14 +301,6 @@ public class ListDataActivity extends AppCompatActivity {
             StepModel stepModel = new StepModel(value, startDate, endDate);
             mAdapter.addItem(stepModel);
 
-
-            /*Log.i(TAG, "Data point:");
-            Log.i(TAG, "\tType: " + dp.getDataType().getName());
-            Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-            Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-            for (Field field : dp.getDataType().getFields()) {
-                Log.i(TAG, "\tField: " + field.getName() + " Value: " + dp.getValue(field));
-            }*/
         }
     }
 

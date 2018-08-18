@@ -14,6 +14,7 @@ import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyActivity;
+import com.bodytel.remapv2.ui.listdata.GoogleFitDistanceActivity;
 import com.bodytel.remapv2.ui.listdata.ListDataActivity;
 
 public class DebugActivity extends AppCompatActivity {
@@ -58,8 +59,8 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     public void onClickDistance(View view){
-        Intent intent = new Intent(this, ListDataActivity.class);
-        intent.putExtra(AppConst.LIST_DATA_TYPE, AppConst.TYPE_DISTANCE);
+        Intent intent = new Intent(this, GoogleFitDistanceActivity.class);
+        //intent.putExtra(AppConst.LIST_DATA_TYPE, AppConst.TYPE_DISTANCE);
         startActivity(intent);
     }
 
