@@ -16,6 +16,7 @@ import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyActivity;
 import com.bodytel.remapv2.ui.listdata.GoogleFitDistanceActivity;
 import com.bodytel.remapv2.ui.listdata.ListDataActivity;
+import com.bodytel.remapv2.ui.listdata.SensorActivity;
 
 public class DebugActivity extends AppCompatActivity {
 
@@ -79,8 +80,8 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     public void onClickAccelerometerData(View view){
-        Intent intent = new Intent(this, ListDataActivity.class);
-        intent.putExtra(AppConst.LIST_DATA_TYPE, AppConst.TYPE_ACCELEROMETER_DATA);
+        Intent intent = new Intent(this, SensorActivity.class);
+        //intent.putExtra(AppConst.LIST_DATA_TYPE, AppConst.TYPE_ACCELEROMETER_DATA);
         startActivity(intent);
     }
 

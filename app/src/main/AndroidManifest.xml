@@ -49,6 +49,11 @@
             android:label="Distance"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".ui.debug.DebugActivity"/>
+
+        <activity android:name=".ui.listdata.SensorActivity"
+            android:label="Accelerometer"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".ui.debug.DebugActivity"/>
     </application>
 
 </manifest>
