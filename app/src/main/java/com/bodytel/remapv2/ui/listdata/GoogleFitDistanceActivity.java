@@ -259,7 +259,7 @@ public class GoogleFitDistanceActivity extends AppCompatActivity {
                         // Analogous to a "Group By" in SQL, defines how data should be aggregated.
                         // bucketByTime allows for a time span, whereas bucketBySession would allow
                         // bucketing by "sessions", which would need to be defined in code.
-                        .bucketByTime(1, TimeUnit.DAYS)
+                        .bucketByTime(1, TimeUnit.HOURS)
                         .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                         .build();
         // [END build_read_data_request]
