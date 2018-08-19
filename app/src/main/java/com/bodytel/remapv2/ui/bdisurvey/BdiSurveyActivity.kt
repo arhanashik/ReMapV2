@@ -14,11 +14,11 @@ import com.bodytel.remapv2.R
 import com.bodytel.remapv2.data.local.AppConst
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper
-import com.bodytel.remapv2.data.local.surveyitem.SurveyItemModel
+import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyItemModel
 import com.bodytel.remapv2.ui.debug.DebugActivity
 import com.bodytel.util.helper.SurveyHelper
 import com.nshmura.recyclertablayout.RecyclerTabLayout
-import kotlinx.android.synthetic.main.activity_survey.*
+import kotlinx.android.synthetic.main.activity_bdi_survey.*
 import com.google.firebase.firestore.FirebaseFirestore
 import org.jetbrains.anko.toast
 import java.util.*
@@ -38,7 +38,7 @@ class BdiSurveyActivity : AppCompatActivity() {
         private lateinit var pagerAdapterBdi: BdiSurveyPagerAdapter
         lateinit var menuItemCancel : MenuItem
 
-        var surveyQuestions: List<SurveyItemModel> = ArrayList()
+        var bdiSurveyQuestions: List<BdiSurveyItemModel> = ArrayList()
         var answers: LinkedHashMap<String, Int> = LinkedHashMap()
         var remaining = 0
 
@@ -54,7 +54,7 @@ class BdiSurveyActivity : AppCompatActivity() {
                 if(!isOld) viewPager.setCurrentItem(viewPager.currentItem + 1, true)
             }, 250L)
 
-            remaining = (surveyQuestions.size - 2) - answers.size
+            remaining = (bdiSurveyQuestions.size - 2) - answers.size
             if(remaining == 0){
                 menuItemCancel.title = "Done"
             }
@@ -63,7 +63,7 @@ class BdiSurveyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_survey)
+        setContentView(R.layout.activity_bdi_survey)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -75,9 +75,9 @@ class BdiSurveyActivity : AppCompatActivity() {
         btnEndSurvey = findViewById(R.id.btn_end_quiz)
 
         answers.clear()
-        surveyQuestions = SurveyHelper.getSurveyQuestionsFromJson("survey_1.json", this)
-        remaining = surveyQuestions.size - 2
-        pagerAdapterBdi = BdiSurveyPagerAdapter(supportFragmentManager, surveyQuestions)
+        bdiSurveyQuestions = SurveyHelper.getSurveyQuestionsFromJson("survey_1.json", this)
+        remaining = bdiSurveyQuestions.size - 2
+        pagerAdapterBdi = BdiSurveyPagerAdapter(supportFragmentManager, bdiSurveyQuestions)
         viewPager.adapter = pagerAdapterBdi
         recyclerTabLayout.setUpWithViewPager(viewPager)
         //viewPager.currentItem = pagerAdapterBdi.count / 2
@@ -141,7 +141,7 @@ class BdiSurveyActivity : AppCompatActivity() {
         surveyData.put(AppConst.ANSWERS, answers)
 
         try {
-            db.collection(AppConst.COLLECTION_SURVEY_DATA)
+            db.collection(AppConst.COLLECTION_BDI_SURVEY_DATA)
                     .add(surveyData)
                     .addOnSuccessListener { documentReference ->
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.id)

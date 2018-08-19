@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/space_5dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_10dp">
+
+        <TextView
+            android:id="@+id/item_audio_sample_txt_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="@string/dummy_data"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_subtitle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_audio_sample_btn_play"/>
+
+        <TextView
+            android:id="@+id/item_audio_sample_txt_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/dummy_date"
+            android:textColor="@color/colorBlack"
+            android:textSize="@dimen/text_small_subtitle"
+            app:layout_constraintTop_toBottomOf="@+id/item_audio_sample_txt_title"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/item_audio_sample_btn_play"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/ic_play"
+            android:contentDescription="@string/description_ic_play"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

@@ -9,7 +9,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import com.bodytel.remapv2.R
-import com.bodytel.remapv2.data.local.surveyitem.SurveyItemModel
+import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyItemModel
 
 class BdiSurveyFragment : Fragment() {
 
@@ -19,14 +19,14 @@ class BdiSurveyFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState:
     Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.fragment_survey, container, false)
+        val view = inflater.inflate(R.layout.fragment_bdi_survey, container, false)
 
         tvQuestion = view.findViewById(R.id.txt_question)
         rgAnswers = view.findViewById(R.id.rg_answers)
 
         val args = arguments
         if (args != null) {
-            val surveyItemModel = args.get("surveyItemModel") as SurveyItemModel
+            val surveyItemModel = args.get("surveyItemModel") as BdiSurveyItemModel
 
             tvQuestion.text = surveyItemModel.question
             for (i in surveyItemModel.options.indices) {
@@ -52,10 +52,10 @@ class BdiSurveyFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(surveyItemModel: SurveyItemModel): BdiSurveyFragment {
+        fun newInstance(bdiSurveyItemModel: BdiSurveyItemModel): BdiSurveyFragment {
 
             val args = Bundle()
-            args.putSerializable("surveyItemModel", surveyItemModel)
+            args.putSerializable("bdiSurveyItemModel", bdiSurveyItemModel)
 
             val fragment = BdiSurveyFragment()
             fragment.arguments = args

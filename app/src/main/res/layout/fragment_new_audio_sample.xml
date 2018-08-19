@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:padding="@dimen/space_16dp">
+
+    <TextView
+        android:id="@+id/fragment_new_audio_sample_txt_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_20dp"
+        android:text="@string/label_before_start_audio_sample"
+        android:textSize="@dimen/text_subtitle"
+        android:textColor="@color/colorBlack"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/fragment_new_audio_sample_txt_label_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_15dp"
+        android:text="@string/label_progress"
+        android:textSize="@dimen/text_subtitle"
+        android:textColor="@color/colorBlack"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/fragment_new_audio_sample_circular_progress"/>
+
+    <antonkozyriatskyi.circularprogressindicator.CircularProgressIndicator
+        android:id="@+id/fragment_new_audio_sample_circular_progress"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_gravity="center"
+        app:progressColor="@color/colorPrimary"
+        app:progressBackgroundColor="#efefefef"
+        app:progressStrokeWidth="5dp"
+        app:drawDot="false"
+        app:textSize="@dimen/text_extra_large_title"
+        app:textColor="@color/colorBlack"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/fragment_new_audio_sample_btn_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/space_30dp"
+        android:paddingStart="@dimen/space_40dp"
+        android:paddingEnd="@dimen/space_40dp"
+        android:text="@string/label_done"
+        android:textSize="@dimen/text_title"
+        android:textAllCaps="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</android.support.constraint.ConstraintLayout>
