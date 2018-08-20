@@ -203,25 +203,18 @@ public class GoogleFitDistanceActivity extends AppCompatActivity {
         }
 
         private DistanceModel showDataSet(DataSet dataSet) {
-
             for (DataPoint dp : dataSet.getDataPoints()) {
-
                 long startDate = dp.getStartTime(TimeUnit.MILLISECONDS);
                 long endDate = dp.getEndTime(TimeUnit.MILLISECONDS);
                 float value = 0.0f;
                 List<Field> fields = dp.getDataType().getFields();
                 for (Field item : fields) {
-
                     value = dp.getValue(item).asFloat();
-
                 }
                 return new DistanceModel(value, startDate, endDate);
             }
-
             return null;
         }
-
-
         @Override
         protected void onPostExecute(Void aVoid) {
             adapter.addItem(modelList);
@@ -235,8 +228,6 @@ public class GoogleFitDistanceActivity extends AppCompatActivity {
      * Returns a {@link DataReadRequest} for all step count changes in the past week.
      */
     public DataReadRequest queryFitnessData() {
-        // [START build_read_data_request]
-        // Setting a start and end date using a range of 1 week before this moment.
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
@@ -250,20 +241,10 @@ public class GoogleFitDistanceActivity extends AppCompatActivity {
 
         DataReadRequest readRequest =
                 new DataReadRequest.Builder()
-                        // The data request can specify multiple data types to return, effectively
-                        // combining multiple data queries into one call.
-                        // In this example, it's very unlikely that the request is for several hundred
-                        // datapoints each consisting of a few steps and a timestamp.  The more likely
-                        // scenario is wanting to see how many steps were walked per day, for 7 days.
                         .aggregate(DataType.TYPE_DISTANCE_DELTA, DataType.AGGREGATE_DISTANCE_DELTA)
-                        // Analogous to a "Group By" in SQL, defines how data should be aggregated.
-                        // bucketByTime allows for a time span, whereas bucketBySession would allow
-                        // bucketing by "sessions", which would need to be defined in code.
                         .bucketByTime(1, TimeUnit.HOURS)
                         .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
                         .build();
-        // [END build_read_data_request]
-
         return readRequest;
     }
 }

@@ -1,9 +1,25 @@
 package com.bodytel.remapv2.data.local.listdata;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import com.bodytel.remapv2.data.local.db.TableName;
+
+@Entity(tableName = TableName.DISTANCE)
 public class DistanceModel {
-    private float distance;
+
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "start_time")
     private long startDate;
+
+    @ColumnInfo(name = "end_time")
     private long endDate;
+
+    @ColumnInfo(name = "distance")
+    private float distance;
 
     public DistanceModel(float distance, long startDate, long endDate) {
         this.distance = distance;

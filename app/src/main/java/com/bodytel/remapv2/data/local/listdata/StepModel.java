@@ -13,22 +13,34 @@ package com.bodytel.remapv2.data.local.listdata;
  *  ****************************************************************************
  */
 
-public class StepModel {
-    private String stepCount;
-    private long startData;
-    private long endTate;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
-    public StepModel(String stepCount, long startData, long endTate) {
+import com.bodytel.remapv2.data.local.db.TableName;
+
+@Entity(tableName = TableName.STEPS)
+public class StepModel {
+
+    @PrimaryKey
+    @ColumnInfo(name = "start_time")
+    private long startData;
+    @ColumnInfo(name = "end_time")
+    private long endTate;
+    @ColumnInfo(name = "steps")
+    private int stepCount;
+
+    public StepModel(int stepCount, long startData, long endTate) {
         this.stepCount = stepCount;
         this.startData = startData;
         this.endTate = endTate;
     }
 
-    public String getStepCount() {
+    public int getStepCount() {
         return stepCount;
     }
 
-    public void setStepCount(String stepCount) {
+    public void setStepCount(int stepCount) {
         this.stepCount = stepCount;
     }
 

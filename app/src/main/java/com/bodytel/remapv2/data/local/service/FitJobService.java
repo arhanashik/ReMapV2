@@ -1,21 +1,15 @@
-package com.bodytel.remapv2.ui.listdata;
+package com.bodytel.remapv2.data.local.service;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import android.app.job.JobParameters;
+import android.app.job.JobService;
+import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
-import com.bodytel.remapv2.R;
-import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.listdata.StepModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
@@ -39,75 +33,48 @@ import java.util.concurrent.TimeUnit;
 import static java.text.DateFormat.getDateInstance;
 import static java.text.DateFormat.getTimeInstance;
 
-public class ListDataActivity extends AppCompatActivity {
+
+
+/*
+ *  ****************************************************************************
+ *  * Created by : Md. Azizul Islam on 8/20/2018 at 2:51 PM.
+ *  * Email : azizul@w3engineers.com
+ *  *
+ *  * Purpose:
+ *  *
+ *  * Last edited by : Md. Azizul Islam on 8/20/2018.
+ *  *
+ *  * Last Reviewed by : <Reviewer Name> on <mm/dd/yy>
+ *  ****************************************************************************
+ */
+
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+public class FitJobService extends JobService {
     private final String TAG = getClass().getName();
-    private RecyclerView mRvListData;
-    private ListDataAdapter mAdapter;
-    private final int REQUEST_OAUTH_REQUEST_CODE = 1;
-
+    private boolean jobCancelled = false;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_data);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mRvListData = findViewById(R.id.activity_list_data_recycler_view);
-
-        int listDataType = getIntent().getIntExtra(AppConst.LIST_DATA_TYPE, 0);
-
-        initView(listDataType);
-
-        //Fitness init
-        initFitnessApiAndCheckPermission();
+    public boolean onStartJob(JobParameters params) {
+        readDataInBackground(params);
+        return true;
     }
 
+    private void readDataInBackground(JobParameters parameters){
+        new Thread(new Runnable() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void run() {
+                if(jobCancelled){
+                    return;
+                }
+                Log.i(TAG, "Job started.");
 
-    private void initView(int listDataType) {
-        /*List<ListDataModel> dataModels = new ArrayList<>();
-
-        if (listDataType == AppConst.TYPE_STEPS) {
-            dataModels.add(new ListDataModel(1, "8.0", "01.08.18, 08:38"));
-            dataModels.add(new ListDataModel(2, "13.0", "01.08.18, 08:36"));
-            dataModels.add(new ListDataModel(3, "40.0", "31.08.18, 23:12"));
-            dataModels.add(new ListDataModel(4, "28.0", "31.08.18, 22:59"));
-            dataModels.add(new ListDataModel(5, "18.0", "31.08.18, 22:01"));
-            dataModels.add(new ListDataModel(6, "37.0", "31.08.18, 19:28"));
-            dataModels.add(new ListDataModel(7, "21.0", "31.08.18, 18:48"));
-            dataModels.add(new ListDataModel(8, "20.0", "31.08.18, 18:31"));
-            dataModels.add(new ListDataModel(9, "39.0", "31.08.18, 18:25"));
-            dataModels.add(new ListDataModel(10, "42.0", "31.08.18, 18:19"));
-        }*/
-
-        mAdapter = new ListDataAdapter();
-        mRvListData.setHasFixedSize(true);
-        mRvListData.setLayoutManager(new LinearLayoutManager(this));
-        mRvListData.setAdapter(mAdapter);
-    }
-
-    private void initFitnessApiAndCheckPermission() {
-        FitnessOptions options = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                .build();
-
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), options)) {
-            GoogleSignIn.requestPermissions(this, REQUEST_OAUTH_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(this), options);
-        } else {
-            insertAndReadData();
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
                 insertAndReadData();
+
+                jobFinished(parameters, false);
             }
-        }
+        }).start();
     }
+
 
     /**
      * Inserts and reads data by chaining {@link Task} from {@link #insertData()} and {@link
@@ -226,7 +193,7 @@ public class ListDataActivity extends AppCompatActivity {
         Date now = new Date();
         cal.setTime(now);
         long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        cal.add(Calendar.DATE, -1);
         long startTime = cal.getTimeInMillis();
 
         java.text.DateFormat dateFormat = getDateInstance();
@@ -290,19 +257,24 @@ public class ListDataActivity extends AppCompatActivity {
 
             long startDate = dp.getStartTime(TimeUnit.MILLISECONDS);
             long endDate = dp.getEndTime(TimeUnit.MILLISECONDS);
-            int value = 0;
+            String value = "";
             List<Field> fields = dp.getDataType().getFields();
             for (Field item : fields) {
                 if ("steps".equals(item.getName())) {
-                    value =  dp.getValue(item).asInt();
+                    value = "" + dp.getValue(item);
                 }
             }
 
             StepModel stepModel = new StepModel(value, startDate, endDate);
-            mAdapter.addItem(stepModel);
+            //mAdapter.addItem(stepModel);
 
         }
     }
 
-
+    @Override
+    public boolean onStopJob(JobParameters params) {
+        Log.e(TAG, "Job cancelled before complete");
+        jobCancelled = true;
+        return false;
+    }
 }
