@@ -9,7 +9,7 @@ import java.io.IOException
 
 object SurveyHelper {
 
-  const val KEY_ARRAY = "bdiSurveyQuestions"
+  const val KEY_ARRAY = "bdi_survey_questions"
   const val KEY_SL = "sl"
   const val KEY_TITLE = "title"
   const val KEY_OPTIONS = "options"
@@ -19,14 +19,13 @@ object SurveyHelper {
         val surveyQuestionsList = ArrayList<BdiSurveyItemModel>()
 
         try {
-
             // Load the JSONArray from the file
             val jsonString = loadJsonFromFile(fileName, context)
             val json = JSONObject(jsonString)
             val jsonSurveyQuestions = json.getJSONArray(KEY_ARRAY)
 
             //this item is dummy and is added for showing the start screen
-            surveyQuestionsList.add(BdiSurveyItemModel(0, "Let's start", ArrayList<String>(), ""))
+            surveyQuestionsList.add(BdiSurveyItemModel(0, "Let's start", ArrayList(), ""))
 
             for (index in 0 until jsonSurveyQuestions.length()) {
                 val obj = jsonSurveyQuestions.getJSONObject(index) as JSONObject
@@ -43,7 +42,7 @@ object SurveyHelper {
             }
 
             //this item is dummy and is added for showing the end screen
-            surveyQuestionsList.add(BdiSurveyItemModel(surveyQuestionsList.size, "Let's End", ArrayList<String>(), ""))
+            surveyQuestionsList.add(BdiSurveyItemModel(surveyQuestionsList.size, "Let's End", ArrayList(), ""))
 
         } catch (e: JSONException) {
             Log.d(SurveyHelper.javaClass.simpleName, e.toString())

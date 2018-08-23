@@ -14,7 +14,7 @@ import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.audiosample.AudioSampleActivity;
-import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyActivity;
+import com.bodytel.remapv2.ui.bdisurvey.StoreBdiSurveyActivity;
 import com.bodytel.remapv2.ui.listdata.GoogleFitDistanceActivity;
 import com.bodytel.remapv2.ui.listdata.ListDataActivity;
 import com.bodytel.remapv2.ui.listdata.SensorActivity;
@@ -78,7 +78,7 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     public void onClickNewBdiSurvey(View view){
-        startActivity(new Intent(this, BdiSurveyActivity.class));
+        startActivity(new Intent(this, StoreBdiSurveyActivity.class));
     }
 
     public void onClickAccelerometerData(View view){

@@ -2,7 +2,6 @@ package com.bodytel.remapv2.ui.moodsurvey;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,26 +11,24 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
-import com.bodytel.remapv2.data.local.AppConst;
+import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyEndFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.bodytel.util.lib.network.NetworkApi;
+import com.bodytel.util.lib.network.callback.StoreMoodSurveyCallback;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
-public class MoodSurveyActivity extends AppCompatActivity implements OnMoodSurveyEvent{
+import java.util.Objects;
 
-    private boolean isSurveyDone;
+public class MoodSurveyActivity extends AppCompatActivity implements OnMoodSurveyEvent, StoreMoodSurveyCallback{
+
     private MenuItem menuItem;
 
-    private FirebaseFirestore db;
     private PrefGlobal prefGlobal;
+    private int newMoodSurveyVersion;
+    private boolean isSurveyDone;
 
     private ProgressDialog progressDialog;
 
@@ -41,11 +38,10 @@ public class MoodSurveyActivity extends AppCompatActivity implements OnMoodSurve
         setContentView(R.layout.activity_mood_survey);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         setTitle("Step 1 of 2");
 
-        db = FirebaseFirestore.getInstance();
         prefGlobal = PrefHelper.providePrefGlobal();
 
         MoodSurveyFragment fragment = new MoodSurveyFragment();
@@ -86,40 +82,52 @@ public class MoodSurveyActivity extends AppCompatActivity implements OnMoodSurve
         storeMoodSurveyData(mood);
     }
 
+    @Override
+    public void onStoreMoodSurveySuccessfully(@NotNull MoodSurveyResultModel resultModel) {
+        showProgress(false);
+
+        setTitle("Step 2 of 2");
+        menuItem.setTitle(getString(R.string.label_done));
+        isSurveyDone = true;
+        replaceFragment(new BdiSurveyEndFragment());
+        prefGlobal.setLastMoodSurveyVersion(newMoodSurveyVersion);
+    }
+
+    @Override
+    public void onStoreMoodSurveyFailure(@NotNull String error) {
+        showProgress(false);
+
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
+    }
+
     private void storeMoodSurveyData(int mood){
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait while storing data...");
-        progressDialog.show();
+        showProgress(true);
 
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put(AppConst.SUBJECT_ID, prefGlobal.getSubjectId());
-        data.put(AppConst.CREATED_AT, System.currentTimeMillis());
-        final int newMoodSurveyVersion = prefGlobal.getLastMoodSurveyVersion() + 1;
-        data.put(AppConst.SURVEY_VERSION, newMoodSurveyVersion);
-        data.put(AppConst.ANSWER, mood);
+        newMoodSurveyVersion = prefGlobal.getLastMoodSurveyVersion() + 1;
 
-        db.collection(AppConst.COLLECTION_MOOD_SURVEY_DATA)
-                .add(data)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentReference> task) {
-                        progressDialog.dismiss();
+        MoodSurveyResultModel resultModel = new MoodSurveyResultModel(
+                0,
+                "",
+                prefGlobal.getSubjectId(),
+                System.currentTimeMillis(),
+                newMoodSurveyVersion,
+                mood,
+                false
+        );
 
-                        setTitle("Step 2 of 2");
-                        menuItem.setTitle(getString(R.string.label_done));
-                        isSurveyDone = true;
-                        replaceFragment(new BdiSurveyEndFragment());
-                        prefGlobal.setLastMoodSurveyVersion(newMoodSurveyVersion);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
+        NetworkApi.on().storeMoodSurveyData(resultModel, this);
+    }
 
-                        Toast.makeText(MoodSurveyActivity.this, e.getMessage() + ". Please try again.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void showProgress(boolean show){
+        if(progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Storing data...");
+        }
+
+        if(show){
+            if(!progressDialog.isShowing()) progressDialog.show();
+        } else{
+            if(progressDialog.isShowing()) progressDialog.dismiss();
+        }
     }
 }

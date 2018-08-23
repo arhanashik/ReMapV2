@@ -22,4 +22,6 @@ public interface AppConst {
     String DOWNLOAD_URL = "download_url";
 
     int REQUEST_CODE_RECORD_AUDIO = 11;
+
+    String JOB_TAG_SEND_DATA_TO_REMOTE = "com.bodytel.remapv2-job";
 }

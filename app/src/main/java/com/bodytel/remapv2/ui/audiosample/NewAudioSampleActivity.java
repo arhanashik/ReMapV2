@@ -3,9 +3,7 @@ package com.bodytel.remapv2.ui.audiosample;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,32 +19,30 @@ import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.AppConst;
+import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
+import com.bodytel.remapv2.data.local.audiosample.AudioSampleService;
+import com.bodytel.remapv2.data.local.dbstorage.DatabaseHelper;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyEndFragment;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.bodytel.util.lib.network.NetworkApi;
+import com.bodytel.util.lib.network.callback.StoreAudioSampleCallback;
 
-import java.io.File;
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Objects;
 
-public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAudioSampleEvent{
+public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAudioSampleEvent, StoreAudioSampleCallback{
 
     private boolean isRecordingDone;
     private MenuItem menuItem;
 
-    private FirebaseFirestore db;
-    private StorageReference storageReference, fileDb;
     private PrefGlobal prefGlobal;
-    private Uri fileUri = null;
+    private AudioSampleService audioSampleService;
 
     private ProgressDialog progressDialog;
 
-    private final String LOG_TAG = "AudioRecordTest";
     private String fileName = null, filePath = null;
     private MediaRecorder mRecorder = null;
 
@@ -60,9 +56,8 @@ public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAu
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        db = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
         prefGlobal = PrefHelper.providePrefGlobal();
+        audioSampleService = DatabaseHelper.provideAudioSampleService();
 
         NewAudioSampleInfoFragment fragment = new NewAudioSampleInfoFragment();
         fragment.setListener(this);
@@ -129,7 +124,37 @@ public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAu
     public void onAudioRecordingDone(long recordingTimeInMils) {
         onRecord(false);
         //onPlay(true);
-        storeNewAudioSample(filePath, fileName);
+        showProgress(true);
+        NetworkApi.on().storeAudioSample(prefGlobal.getSubjectId(), filePath, fileName, this);
+    }
+
+    @Override
+    public void onStoreAudioSampleProgress(double progress) {
+        Log.d("Uploading audio sample", "Upload is " + progress + "% done");
+    }
+
+    @Override
+    public void onStoreAudioSampleSuccessfully(@NotNull String downloadLink) {
+        Toast.makeText(this, "Sample saved.", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStoreAudioSampleReferenceSuccessfully(@NotNull AudioSampleModel resultModel) {
+        showProgress(false);
+
+        new Thread(()->{
+            audioSampleService.insert(resultModel);
+        }).start();
+        isRecordingDone = true;
+        menuItem.setTitle(getString(R.string.label_done));
+        replaceFragment(new BdiSurveyEndFragment());
+    }
+
+    @Override
+    public void onStoreAudioSampleFailure(@NotNull String error) {
+        showProgress(false);
+
+        Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
     }
 
     private void gotoRecordingFragment(){
@@ -143,58 +168,6 @@ public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAu
                 .beginTransaction()
                 .replace(R.id.activity_new_audio_sample_container, fragment)
                 .commit();
-    }
-
-    private void storeNewAudioSample(String filePath, String fileName){
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait while storing audio...");
-        progressDialog.show();
-
-        fileUri = Uri.fromFile(new File(filePath));
-        fileDb = storageReference.child("audio/" + fileName);
-
-        fileDb.putFile(fileUri)
-                .addOnProgressListener(taskSnapshot -> {
-                    double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    Log.d(LOG_TAG, "Upload is " + progress + "% done");
-                })
-                .addOnFailureListener(e -> {
-                    progressDialog.dismiss();
-                    Log.d(LOG_TAG, e.getMessage());
-                    Toast.makeText(NewAudioSampleActivity.this, e.getMessage() + ". Please try again.",
-                            Toast.LENGTH_SHORT).show();
-                })
-                .addOnCompleteListener(task -> {
-                    progressDialog.dismiss();
-                    storeAudioSampleReference(fileName, fileDb.getDownloadUrl().toString());
-                });
-    }
-
-    private void storeAudioSampleReference(String fileName, String reference){
-        progressDialog.setMessage("Storing reference...");
-        progressDialog.show();
-
-        Map<String, Object> data = new LinkedHashMap<>();
-        data.put(AppConst.SUBJECT_ID, prefGlobal.getSubjectId());
-        data.put(AppConst.CREATED_AT, System.currentTimeMillis());
-        data.put(AppConst.FILE_NAME, fileName);
-        data.put(AppConst.DOWNLOAD_URL, reference);
-
-        db.collection(AppConst.COLLECTION_AUDIO_SAMPLE_DATA)
-                .add(data)
-                .addOnCompleteListener(task -> {
-                    progressDialog.dismiss();
-
-                    menuItem.setTitle(getString(R.string.label_done));
-                    isRecordingDone = true;
-                    replaceFragment(new BdiSurveyEndFragment());
-                })
-                .addOnFailureListener(e -> {
-                    progressDialog.dismiss();
-
-                    Toast.makeText(NewAudioSampleActivity.this, e.getMessage() + ". Please try again.",
-                            Toast.LENGTH_SHORT).show();
-                });
     }
 
     private boolean hasRecordPermission(){
@@ -227,6 +200,7 @@ public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAu
         try {
             mRecorder.prepare();
         } catch (IOException e) {
+            String LOG_TAG = "AudioRecordTest";
             Log.e(LOG_TAG, "prepare() failed");
         }
 
@@ -248,4 +222,16 @@ public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAu
         }
     }
 
+    private void showProgress(boolean show){
+        if(progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Storing data...");
+        }
+
+        if(show) {
+            if (!progressDialog.isShowing()) progressDialog.show();
+        }else{
+            if(progressDialog.isShowing()) progressDialog.dismiss();
+        }
+    }
 }
