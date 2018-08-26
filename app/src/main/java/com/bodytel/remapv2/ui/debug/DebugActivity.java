@@ -13,10 +13,14 @@ import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
-import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyActivity;
+import com.bodytel.remapv2.ui.audiosample.AudioSampleActivity;
+import com.bodytel.remapv2.ui.bdisurvey.StoreBdiSurveyActivity;
 import com.bodytel.remapv2.ui.listdata.GoogleFitDistanceActivity;
 import com.bodytel.remapv2.ui.listdata.ListDataActivity;
 import com.bodytel.remapv2.ui.listdata.SensorActivity;
+import com.bodytel.remapv2.ui.moodsurvey.MoodSurveyActivity;
+import com.bodytel.remapv2.ui.audiosample.NewAudioSampleActivity;
+import com.bodytel.remapv2.ui.sleepsurvey.SleepSurveyActivity;
 
 public class DebugActivity extends AppCompatActivity {
 
@@ -66,17 +70,15 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     public void onClickNewAudioSample(View view){
-
+        startActivity(new Intent(this, NewAudioSampleActivity.class));
     }
 
     public void onClickAudioSamples(View view){
-        Intent intent = new Intent(this, ListDataActivity.class);
-        intent.putExtra(AppConst.LIST_DATA_TYPE, AppConst.TYPE_AUDIO_SAMPLE);
-        startActivity(intent);
+        startActivity(new Intent(this, AudioSampleActivity.class));
     }
 
     public void onClickNewBdiSurvey(View view){
-        startActivity(new Intent(this, BdiSurveyActivity.class));
+        startActivity(new Intent(this, StoreBdiSurveyActivity.class));
     }
 
     public void onClickAccelerometerData(View view){
@@ -86,11 +88,11 @@ public class DebugActivity extends AppCompatActivity {
     }
 
     public void onClickNewSleepEntry(View view){
-
+        startActivity(new Intent(this, SleepSurveyActivity.class));
     }
 
     public void onClickNewMoodEntry(View view){
-
+        startActivity(new Intent(this, MoodSurveyActivity.class));
     }
 
     public void onClickScheduleNotification(View view){

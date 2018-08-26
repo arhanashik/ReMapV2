@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ReMapV2</string>
+    <string name="db_name">db_remap_v2</string>
 
     <string name="app_full_name">ReMAP - Remote Monitoring Application in Psychiatry</string>
     <string name="app_uses">This app is used in the FOR 2107 study of the University of Münster.</string>
@@ -33,6 +34,24 @@
         a galley of type and scrambled it to make a type specimen book. It has survived not only five
         centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
     </string>
+    <string name="content_new_audio_sample_1">
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has
+        been the industry\'s standard dummy text ever since the 1500s.
+    </string>
+    <string name="content_new_audio_sample_2">
+        It has survived not only five
+        centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    </string>
+    <string name="content_new_audio_sample_3">
+        It has survived not only five
+        centuries, but also the leap into electronic typesetting, remaining essentially unchanged.
+    </string>
+    <string name="content_sleep_survey_question">
+        Wie viele Stunden haben Sie in der letzten Nacht gschlafen?
+    </string>
+    <string name="content_mood_survey_question">
+        Wie ist lhre Stimmung heute?
+    </string>
 
     <string name="description_app_logo">App logo</string>
     <string name="description_ic_done">Done Icon</string>
@@ -53,8 +72,16 @@
     <string name="label_activity_not_completed">Activity not completed</string>
     <string name="label_thanks">Thanks a lot!</string>
     <string name="label_hint_to_complete_activity">Answer all questions for completing the activity</string>
+    <string name="label_next">Next</string>
 
     <string name="dummy_data">8.00</string>
     <string name="dummy_date">01.08.18, 08:38</string>
     <string name="dummy_subject_id">A1234</string>
+    <string name="title_activity_new_audio_sample">Audio Sample</string>
+    <string name="label_voice">Voice</string>
+    <string name="description_ic_mobile">Mobile Icon</string>
+    <string name="description_ic_voice">Voice Icon</string>
+    <string name="label_before_start_audio_sample">Please wait while we check the background noise level</string>
+    <string name="label_progress">Starting activity in</string>
+    <string name="description_ic_play">Play Icon</string>
 </resources>
