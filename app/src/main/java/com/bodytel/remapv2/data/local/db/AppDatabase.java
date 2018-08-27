@@ -29,6 +29,11 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract DistanceDao getDistanceDao();
 
     private static AppDatabase sInstance;
+
+    public static AppDatabase on(){
+        return sInstance;
+    }
+
     @VisibleForTesting
     public static final String DATABASE_NAME = "basic-sample-db";
 

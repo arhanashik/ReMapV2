@@ -31,6 +31,9 @@
             </intent-filter>
         </service>
 
+        <service android:name=".data.local.service.FitJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
+
         <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -92,6 +95,7 @@
             android:label="Accelerometer"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".ui.debug.DebugActivity"/>
+
     </application>
 
 </manifest>

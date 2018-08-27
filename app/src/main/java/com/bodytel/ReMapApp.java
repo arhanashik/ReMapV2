@@ -23,13 +23,9 @@ public class ReMapApp extends Application{
 
         DatabaseService.init(mContext);
 
-        ScheduledJobHelper
-                .on()
-                .init();
+        ScheduledJobHelper.on().init();
 
-        FirebaseUtil
-                .on()
-                .init();
+        FirebaseUtil.on().init();
     }
 
     public static Context getContext(){

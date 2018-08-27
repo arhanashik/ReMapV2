@@ -42,9 +42,9 @@ public class ListDataAdapter extends BaseAdapter<StepModel>{
         }
         @Override
         public void bind(StepModel item) {
-            stepCount.setText(item.getStepCount());
+            stepCount.setText(""+item.getStepCount());
 
-            String datevalue = getDate(item.getEndTate())+", "+getOnlyTime(item.getEndTate());
+            String datevalue = getDate(item.getStartData())+", "+getOnlyTime(item.getStartData());
 
             dateValue.setText(datevalue);
         }
@@ -57,7 +57,7 @@ public class ListDataAdapter extends BaseAdapter<StepModel>{
 
     private String getOnlyTime(long milliSeconds){
         Date date = new Date(milliSeconds);
-        DateFormat format = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
+        DateFormat format = new SimpleDateFormat("mm:ss aa", Locale.getDefault());
         format.setTimeZone(TimeZone.getDefault());
         return format.format(date);
     }

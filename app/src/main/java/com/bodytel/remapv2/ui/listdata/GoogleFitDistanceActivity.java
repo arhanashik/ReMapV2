@@ -82,7 +82,7 @@ public class GoogleFitDistanceActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+        if (requestCode == PermissionUtil.PERMISSIONS_REQUEST) {
             if (grantResults.length <= 0) {
                 // If user interaction was interupted, the permission request is cancelled and you
                 // receive empty arrays.

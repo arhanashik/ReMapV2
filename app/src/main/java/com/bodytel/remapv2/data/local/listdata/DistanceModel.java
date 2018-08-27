@@ -50,4 +50,9 @@ public class DistanceModel {
     public void setEndDate(long endDate) {
         this.endDate = endDate;
     }
+
+    @Override
+    public String toString() {
+        return "Dis ="+distance+" Start ="+startDate+" End ="+endDate;
+    }
 }

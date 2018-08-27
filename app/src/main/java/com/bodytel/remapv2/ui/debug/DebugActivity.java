@@ -142,7 +142,7 @@ public class DebugActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT >=21 ) {
             ComponentName componentName = new ComponentName(this, FitJobService.class);
 
-            JobInfo jobInfo = new JobInfo.Builder(123, componentName)
+            JobInfo jobInfo = new JobInfo.Builder(355, componentName)
                     .setRequiresCharging(true)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED)
                     .setPersisted(true)

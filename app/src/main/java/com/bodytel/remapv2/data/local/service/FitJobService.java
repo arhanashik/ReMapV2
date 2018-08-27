@@ -2,14 +2,29 @@ package com.bodytel.remapv2.data.local.service;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 
+import com.bodytel.remapv2.data.local.db.AppDatabase;
+import com.bodytel.remapv2.data.local.db.StepsDao;
+import com.bodytel.remapv2.data.local.listdata.DistanceModel;
 import com.bodytel.remapv2.data.local.listdata.StepModel;
+import com.bodytel.remapv2.ui.listdata.GoogleFitDistanceActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.data.Bucket;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
@@ -18,6 +33,7 @@ import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResponse;
+import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,6 +41,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +69,12 @@ import static java.text.DateFormat.getTimeInstance;
 public class FitJobService extends JobService {
     private final String TAG = getClass().getName();
     private boolean jobCancelled = false;
+    private StepsDao stepsDao;
+    public static GoogleApiClient client = null;
+    public FitJobService(){
+        stepsDao = AppDatabase.on().getStepDao();
+    }
+
     @Override
     public boolean onStartJob(JobParameters params) {
         readDataInBackground(params);
@@ -69,7 +92,7 @@ public class FitJobService extends JobService {
                 Log.i(TAG, "Job started.");
 
                 insertAndReadData();
-
+                //buildFitnessClient();
                 jobFinished(parameters, false);
             }
         }).start();
@@ -159,7 +182,7 @@ public class FitJobService extends JobService {
      */
     private Task<DataReadResponse> readHistoryData() {
         // Begin by creating the query.
-        DataReadRequest readRequest = queryFitnessData();
+        DataReadRequest readRequest = queryStepsData();
 
         // Invoke the History API to fetch the data with the query
         return Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
@@ -186,7 +209,7 @@ public class FitJobService extends JobService {
     /**
      * Returns a {@link DataReadRequest} for all step count changes in the past week.
      */
-    public DataReadRequest queryFitnessData() {
+    public DataReadRequest queryStepsData() {
         // [START build_read_data_request]
         // Setting a start and end date using a range of 1 week before this moment.
         Calendar cal = Calendar.getInstance();
@@ -267,9 +290,176 @@ public class FitJobService extends JobService {
 
             StepModel stepModel = new StepModel(value, startDate, endDate);
             //mAdapter.addItem(stepModel);
+            new Thread(()->stepsDao.insert(stepModel)).start();
 
         }
     }
+
+
+    /***************************Distance**********************/
+
+/*
+
+    public void buildFitnessClient() {
+        Log.d(TAG, "buildFitnessClient called");
+
+        client = new GoogleApiClient.Builder(this)
+                .addApi(Fitness.RECORDING_API)
+                .addApi(Fitness.HISTORY_API)
+                .addApi(Fitness.SENSORS_API)
+                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+                .addConnectionCallbacks(
+                        new GoogleApiClient.ConnectionCallbacks() {
+                            @Override
+                            public void onConnected(@Nullable Bundle bundle) {
+                                Log.d(TAG, "buildFitnessClient connected");
+                                // Now you can make calls to the Fitness APIs
+                                // the HomeFragment will call the "subscribeDailySteps()"
+                                subscribeDailyDistance();
+                            }
+
+                            @Override
+                            public void onConnectionSuspended(int i) {
+
+                                Log.i(TAG, "buildFitnessClient connection suspended");
+                                if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+                                    Log.w(TAG, "Connection lost.  Cause: Network Lost.");
+                                } else if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+                                    Log.w(TAG, "Connection lost.  Reason: Service Disconnected");
+                                }
+                            }
+
+                        }
+                )
+                */
+/*.enableAutoManage(this, 0, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.e(TAG, "Google Play services failed. Cause: " + connectionResult.toString());
+
+                    }
+                })*//*
+
+                .build();
+    }
+
+
+    public void subscribeDailyDistance() {
+        // To create a subscription, invoke the Recording API.
+        // As soon as the subscription is active, fitness data will start recording
+        Fitness.RecordingApi.subscribe(client, DataType.TYPE_DISTANCE_DELTA)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+
+                        if (status.isSuccess()) {
+
+                            if (status.getStatusCode() == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
+                                Log.d(TAG, "Existing subscription for activity detected.");
+
+                            } else {
+                                Log.d(TAG, "Successfully subscribed");
+
+                            }
+                            new VerifyDataTaskDistance().execute(client);
+
+                        } else {
+                            Log.e(TAG, "There was a problem subscribing");
+                        }
+
+                    }
+                });
+
+
+    }
+
+    private class VerifyDataTaskDistance extends AsyncTask<GoogleApiClient, Void, Void> {
+
+        List<DistanceModel> modelList = new ArrayList<>();
+
+        protected Void doInBackground(GoogleApiClient... clients) {
+
+            PendingResult<DataReadResult> result = Fitness.HistoryApi.readData(clients[0], queryFitnessData());
+
+            DataReadResult totalResult = result.await(30, TimeUnit.SECONDS);
+
+            if (totalResult.getBuckets().size() > 0) {
+                Log.i(TAG, "Number distance bucket: " + totalResult.getBuckets().size());
+                for (Bucket bucket : totalResult.getBuckets()) {
+                    List<DataSet> dataSets = bucket.getDataSets();
+                    for (DataSet dataSet : dataSets) {
+                        DistanceModel distanceModel = showDataSet(dataSet);
+                        if (distanceModel != null) {
+                            modelList.add(distanceModel);
+                        }
+                    }
+                }
+            } else if (totalResult.getDataSets().size() > 0) {
+                Log.i(TAG, "Number of distance dataset: " + totalResult.getDataSets().size());
+                for (DataSet dataSet : totalResult.getDataSets()) {
+                    DistanceModel distanceModel = showDataSet(dataSet);
+                    if (distanceModel != null) {
+                        modelList.add(distanceModel);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private DistanceModel showDataSet(DataSet dataSet) {
+            for (DataPoint dp : dataSet.getDataPoints()) {
+                long startDate = dp.getStartTime(TimeUnit.MILLISECONDS);
+                long endDate = dp.getEndTime(TimeUnit.MILLISECONDS);
+                float value = 0.0f;
+                List<Field> fields = dp.getDataType().getFields();
+                for (Field item : fields) {
+                    value = dp.getValue(item).asFloat();
+                }
+                return new DistanceModel(value, startDate, endDate);
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            //adapter.addItem(modelList);
+
+            for(DistanceModel item: modelList){
+                Log.i(TAG,"Distance data  ="+item.toString());
+            }
+
+        }
+
+    }
+
+
+    */
+/**
+     * Returns a {@link DataReadRequest} for all step count changes in the past week.
+     *//*
+
+    public DataReadRequest queryFitnessData() {
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        long startTime = cal.getTimeInMillis();
+
+        DateFormat dateFormat = getDateInstance();
+        Log.i(TAG, "Range Start: " + dateFormat.format(startTime));
+        Log.i(TAG, "Range End: " + dateFormat.format(endTime));
+
+        DataReadRequest readRequest =
+                new DataReadRequest.Builder()
+                        .aggregate(DataType.TYPE_DISTANCE_DELTA, DataType.AGGREGATE_DISTANCE_DELTA)
+                        .bucketByTime(1, TimeUnit.HOURS)
+                        .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                        .build();
+        return readRequest;
+    }
+*/
 
     @Override
     public boolean onStopJob(JobParameters params) {
