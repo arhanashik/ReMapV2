@@ -31,6 +31,26 @@ public class PrefGlobal {
                 .apply();
     }
 
+    public int getLastSleepSurveyVersion(){
+        return mPreferences.getInt(PrefProp.LAST_SLEEP_SURVEY_VERSION, 0);
+    }
+
+    public void setLastSleepSurveyVersion(int sleepSurveyVersion){
+        mPreferences.edit()
+                .putInt(PrefProp.LAST_SLEEP_SURVEY_VERSION, sleepSurveyVersion)
+                .apply();
+    }
+
+    public int getLastMoodSurveyVersion(){
+        return mPreferences.getInt(PrefProp.LAST_MOOD_SURVEY_VERSION, 0);
+    }
+
+    public void setLastMoodSurveyVersion(int moodSurveyVersion){
+        mPreferences.edit()
+                .putInt(PrefProp.LAST_MOOD_SURVEY_VERSION, moodSurveyVersion)
+                .apply();
+    }
+
     public void clearAll(){
         mPreferences.edit()
                 .clear()

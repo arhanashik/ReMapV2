@@ -2,31 +2,30 @@ package com.bodytel.util.helper
 
 import android.content.Context
 import android.util.Log
-import com.bodytel.remapv2.data.local.surveyitem.SurveyItemModel
+import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyItemModel
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
 object SurveyHelper {
 
-  const val KEY_ARRAY = "surveyQuestions"
+  const val KEY_ARRAY = "bdi_survey_questions"
   const val KEY_SL = "sl"
   const val KEY_TITLE = "title"
   const val KEY_OPTIONS = "options"
   const val KEY_ANSWER = "answer"
 
-  fun getSurveyQuestionsFromJson(fileName: String, context: Context): List<SurveyItemModel> {
-        val surveyQuestionsList = ArrayList<SurveyItemModel>()
+  fun getSurveyQuestionsFromJson(fileName: String, context: Context): List<BdiSurveyItemModel> {
+        val surveyQuestionsList = ArrayList<BdiSurveyItemModel>()
 
         try {
-
             // Load the JSONArray from the file
             val jsonString = loadJsonFromFile(fileName, context)
             val json = JSONObject(jsonString)
             val jsonSurveyQuestions = json.getJSONArray(KEY_ARRAY)
 
             //this item is dummy and is added for showing the start screen
-            surveyQuestionsList.add(SurveyItemModel(0, "Let's start", ArrayList<String>(), ""))
+            surveyQuestionsList.add(BdiSurveyItemModel(0, "Let's start", ArrayList(), ""))
 
             for (index in 0 until jsonSurveyQuestions.length()) {
                 val obj = jsonSurveyQuestions.getJSONObject(index) as JSONObject
@@ -39,11 +38,11 @@ object SurveyHelper {
                     options.add(optionsArr.getJSONObject(i).getString((i+1).toString()))
                 }
 
-                surveyQuestionsList.add(SurveyItemModel(sl, title, options, ""))
+                surveyQuestionsList.add(BdiSurveyItemModel(sl, title, options, ""))
             }
 
             //this item is dummy and is added for showing the end screen
-            surveyQuestionsList.add(SurveyItemModel(surveyQuestionsList.size, "Let's End", ArrayList<String>(), ""))
+            surveyQuestionsList.add(BdiSurveyItemModel(surveyQuestionsList.size, "Let's End", ArrayList(), ""))
 
         } catch (e: JSONException) {
             Log.d(SurveyHelper.javaClass.simpleName, e.toString())

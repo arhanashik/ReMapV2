@@ -17,6 +17,8 @@ import android.util.Log;
 import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.listdata.SensorModel;
 
+import java.util.Objects;
+
 public class SensorActivity extends AppCompatActivity implements SensorEventListener {
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -36,13 +38,16 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         // Get an instance of the SensorManager
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         initView();
 
+        if (mSensorManager != null) {
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
     }
 
     private void initView(){

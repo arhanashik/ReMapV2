@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/colorWhite"
+    android:padding="@dimen/space_16dp">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/fragment_new_audio_sample_info_txt_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/space_15dp"
+            android:text="@string/label_voice"
+            android:textSize="@dimen/text_extra_large_title"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/fragment_new_audio_sample_info_txt_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/content_new_audio_sample_1"
+            android:textSize="@dimen/text_subtitle"
+            android:textColor="@color/colorBlack"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_new_audio_sample_info_txt_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/fragment_new_audio_sample_info_ic_mobile"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginTop="@dimen/space_30dp"
+            app:srcCompat="@drawable/ic_mobile"
+            android:contentDescription="@string/description_ic_mobile"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_new_audio_sample_info_txt_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/fragment_new_audio_sample_info_ic_voice"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="@dimen/space_5dp"
+            app:srcCompat="@drawable/ic_voice"
+            android:contentDescription="@string/description_ic_voice"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_new_audio_sample_info_ic_mobile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+            android:id="@+id/fragment_new_audio_sample_info_btn_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_40dp"
+            android:paddingStart="@dimen/space_30dp"
+            android:paddingEnd="@dimen/space_30dp"
+            android:text="@string/label_next"
+            android:textAllCaps="false"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_new_audio_sample_info_ic_voice"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
