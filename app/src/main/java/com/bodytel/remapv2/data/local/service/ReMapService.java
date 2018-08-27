@@ -24,7 +24,11 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
+import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
+import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataService;
+import com.bodytel.remapv2.data.local.dbstorage.DatabaseHelper;
 import com.bodytel.remapv2.data.local.listdata.SensorModel;
+import com.bodytel.util.helper.NumberUtil;
 
 public class ReMapService extends Service implements SensorEventListener {
     /**
@@ -50,12 +54,18 @@ public class ReMapService extends Service implements SensorEventListener {
 
     private volatile float totalX = 0.0f, totalY = 0.0f, totalZ = 0.0f;
     private volatile float itemCount = 0.0f;
+    private float lastX, lastY, lastZ;
 
     private Handler handler;
     private HandlerThread handlerThread;
+
+    private AccelerometerDataService accelerometerDataService;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        accelerometerDataService = DatabaseHelper.provideAccelerometerDataService();
 
         handlerThread = new HandlerThread("min_count");
         handlerThread.start();
@@ -99,22 +109,43 @@ public class ReMapService extends Service implements SensorEventListener {
         }
 
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        calculateMin();
     }
 
 
-    private void calculateMin(){
+    private void calculateMin() {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 //Log.e("SensorActivity","Min X ="+totalX/itemCount+" Min Y ="+totalY/itemCount+" Min Z ="+totalZ/itemCount);
 
                 long time = System.currentTimeMillis();
-                float X = totalX/itemCount;
-                float Y = totalY/itemCount;
-                float Z = totalZ/itemCount;
+                float X = NumberUtil.floorToOneDecimalPoint(totalX / itemCount);
+                float Y = NumberUtil.floorToOneDecimalPoint(totalY / itemCount);
+                float Z = NumberUtil.floorToOneDecimalPoint(totalZ / itemCount);
 
-                String value = "("+String.format("%.2f", X)+", "+String.format("%.2f", Y)+", "+String.format("%.2f",Z)+")";
-                Log.e("ReMapService","Time ="+time+" value ="+value);
+                String value = "(" + X + ", " + Y + ", " + Z + ")";
+
+                if (lastX != X || lastY != Y || lastZ != Z) {
+                    AccelerometerDataModel model = new AccelerometerDataModel(
+                            0,
+                            time,
+                            X,
+                            Y,
+                            Z,
+                            false
+                    );
+
+                    accelerometerDataService.insert(model);
+
+                    lastX = X;
+                    lastY = Y;
+                    lastZ = Z;
+
+                    Log.e("ReMapService", "Time =" + time + " value =" + value);
+                }
+
+
 
                 totalX = 0.0f;
                 totalY = 0.0f;
@@ -202,8 +233,8 @@ public class ReMapService extends Service implements SensorEventListener {
         float mSensorY = event.values[1];
         float mSensorZ = event.values[2];
 
-        itemCount ++;
-        totalX = totalX+mSensorX;
+        itemCount++;
+        totalX = totalX + mSensorX;
         totalY = totalY + mSensorY;
         totalZ = totalZ + mSensorZ;
     }

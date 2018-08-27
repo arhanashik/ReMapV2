@@ -7,7 +7,7 @@ public class NumberUtil {
     private static DecimalFormat df = new DecimalFormat(".#");
 
     public static float floorToOneDecimalPoint(float input){
-        if(input <= 0) return input;
+        if(input == 0) return input;
 
         df.setRoundingMode(RoundingMode.DOWN);
         return Float.valueOf(df.format(input));
