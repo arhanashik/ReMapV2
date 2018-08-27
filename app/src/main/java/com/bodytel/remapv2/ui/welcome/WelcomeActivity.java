@@ -14,9 +14,10 @@ import android.widget.Toast;
 import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
+import com.bodytel.remapv2.ui.base.ServiceConnectionActivity;
 import com.bodytel.remapv2.ui.debug.DebugActivity;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends ServiceConnectionActivity {
 
     private TextView txtSubjectId;
 
