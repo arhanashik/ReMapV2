@@ -257,11 +257,11 @@ public class FitJobService extends JobService {
 
             long startDate = dp.getStartTime(TimeUnit.MILLISECONDS);
             long endDate = dp.getEndTime(TimeUnit.MILLISECONDS);
-            String value = "";
+            int value = 0;
             List<Field> fields = dp.getDataType().getFields();
             for (Field item : fields) {
                 if ("steps".equals(item.getName())) {
-                    value = "" + dp.getValue(item);
+                    value =dp.getValue(item).asInt();
                 }
             }
 
