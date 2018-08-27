@@ -15,10 +15,6 @@ public class AccelerometerDataService {
         return mAccelerometerDataModelDao.getAccelerometerDataModel(id);
     }
 
-    public AccelerometerDataModel getAccelerometerDataModel(String dataId) {
-        return mAccelerometerDataModelDao.getAccelerometerDataModel(dataId);
-    }
-
     public long insert(AccelerometerDataModel accelerometerDataModel) {
         long id = mAccelerometerDataModelDao.insert(accelerometerDataModel);
         accelerometerDataModel.setId(id);

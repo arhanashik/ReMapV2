@@ -34,12 +34,12 @@ public class ReMapService extends Service implements SensorEventListener {
     public static final int RUN_FOREGROUND = 2;
     public static final int RUN_BACKGROUND = 3;
 
-    public static final String START_FOREGROUND_ACTION = "io.left.meshim.action.startforeground";
-    public static final String STOP_FOREGROUND_ACTION = "io.left.meshim.action.stopforeground";
+    public static final String START_FOREGROUND_ACTION = "com.bodytel.remapv2.action.startforeground";
+    public static final String STOP_FOREGROUND_ACTION = "com.bodytel.remapv2.action.stopforeground";
     public static final int FOREGROUND_SERVICE_ID = 101;
 
-    public static final String CHANNEL_NAME = "meshim";
-    public static final String CHANNEL_ID = "notification_channel";
+    public static final String CHANNEL_NAME = "remap";
+    public static final String CHANNEL_ID = "remap_notification_channel";
 
     private Notification mServiceNotification;
     private boolean mIsForeground = false;
@@ -63,7 +63,7 @@ public class ReMapService extends Service implements SensorEventListener {
         handler = new Handler(handlerThread.getLooper());
 
         Intent stopForegroundIntent = new Intent(this, ReMapService.class);
-        stopForegroundIntent.setAction(STOP_FOREGROUND_ACTION);
+        //stopForegroundIntent.setAction(STOP_FOREGROUND_ACTION);
         PendingIntent pendingIntent
                 = PendingIntent.getService(this, 0, stopForegroundIntent, 0);
         NotificationCompat.Builder builder;
@@ -72,7 +72,9 @@ public class ReMapService extends Service implements SensorEventListener {
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_NAME,
                     NotificationManager.IMPORTANCE_DEFAULT);
-            mNotificationManager.createNotificationChannel(channel);
+            if (mNotificationManager != null) {
+                mNotificationManager.createNotificationChannel(channel);
+            }
             builder = new NotificationCompat.Builder(this, CHANNEL_ID);
         } else {
             //noinspection deprecation
@@ -82,7 +84,7 @@ public class ReMapService extends Service implements SensorEventListener {
         mServiceNotification = builder.setAutoCancel(false)
                 .setTicker(resources.getString(R.string.app_name))
                 .setContentTitle("ReMap")
-                .setContentText("Needs to running for data collection")
+                .setContentText("Needs to be running for data collection")
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)

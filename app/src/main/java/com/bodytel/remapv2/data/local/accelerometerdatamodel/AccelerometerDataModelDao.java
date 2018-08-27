@@ -25,9 +25,6 @@ public interface AccelerometerDataModelDao {
     @Query("SELECT * FROM " + TableNames.TBL_ACCELEROMETER_DATA + " WHERE " + ColumnNames.ID + " = :id")
     AccelerometerDataModel getAccelerometerDataModel(long id);
 
-    @Query("SELECT * FROM " + TableNames.TBL_ACCELEROMETER_DATA + " WHERE " + ColumnNames.DATA_ID + " = :dataId")
-    AccelerometerDataModel getAccelerometerDataModel(String dataId);
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insert(AccelerometerDataModel accelerometerDataModel);
 
