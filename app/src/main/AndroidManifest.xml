@@ -34,6 +34,9 @@
         <service android:name=".data.local.service.FitJobService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
+        <service android:name=".data.local.service.ReMapService"
+            android:enabled="true"/>
+
         <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

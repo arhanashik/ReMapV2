@@ -2,6 +2,7 @@ package com.bodytel.remapv2.ui.listdata;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,11 @@ import android.util.Log;
 import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.db.AppDatabase;
+import com.bodytel.remapv2.data.local.listdata.DistanceModel;
 import com.bodytel.remapv2.data.local.listdata.StepModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.Bucket;
@@ -25,6 +29,7 @@ import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.result.DataReadResponse;
+import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,6 +37,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -122,13 +128,8 @@ public class ListDataActivity extends AppCompatActivity {
         });
 
 
-        /*insertDistanceData().continueWithTask(new Continuation<Void, Task<DataReadResponse>>() {
-            @Override
-            public Task<DataReadResponse> then(@NonNull Task<Void> task) throws Exception {
-                return readHistoryData();
-            }
-        });
-        */
+        subscribeDistance();
+
     }
 
     /**
@@ -157,35 +158,55 @@ public class ListDataActivity extends AppCompatActivity {
                                 }
                             }
                         });
+
+
+    }
+
+    private void subscribeDistance(){
+        Fitness.getRecordingClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .subscribe(DataType.TYPE_DISTANCE_DELTA)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i(TAG, "Successfully Distance subscribed!");
+                        readDistanceHistoryData();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i(TAG, "There was a Distance problem subscribing.");
+                    }
+                });
     }
 
 
-    /**
-     * Creates a {@link DataSet} and inserts it into user's Google Fit history.
-     */
-    private Task<Void> insertDistanceData() {
-        /**
-         *   Create a new data set and insertion request.
-         */
+    private void readDistanceHistoryData() {
+        // Begin by creating the query.
+        //DataReadRequest readRequest = queryDistanceFitnessData();
 
-        DataSet dataSet = insertFitnessDistanceData();
-
-        // Then, invoke the History API to insert the data.
-        Log.i(TAG, "Inserting the dataset in the History API.");
-
-        return Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .insertData(dataSet).addOnCompleteListener(
-                        new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    // At this point, the data has been inserted and can be read.
-                                    Log.i(TAG, "Data insert was successful!");
-                                } else {
-                                    Log.e(TAG, "There was a problem inserting the dataset.", task.getException());
-                                }
+        // Invoke the History API to fetch the data with the query
+        // Invoke the History API to fetch the data with the query
+        Fitness.getHistoryClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .readDailyTotal(DataType.TYPE_DISTANCE_DELTA)
+                .addOnSuccessListener(new OnSuccessListener<DataSet>() {
+                    @Override
+                    public void onSuccess(DataSet dataSet) {
+                       // dumpDataSet(dataSet);
+                        for (DataPoint dp : dataSet.getDataPoints()) {
+                            long startDate = dp.getStartTime(TimeUnit.MILLISECONDS);
+                            long endDate = dp.getEndTime(TimeUnit.MILLISECONDS);
+                            float value = 0.0f;
+                            List<Field> fields = dp.getDataType().getFields();
+                            for (Field item : fields) {
+                                value = dp.getValue(item).asFloat();
                             }
-                        });
+                            Log.i("Distance_check", "Distance ="+value+"  start ="+startDate+"  end ="+endDate);
+                        }
+
+                    }
+                });
+
     }
 
 
@@ -228,41 +249,6 @@ public class ListDataActivity extends AppCompatActivity {
 
 
 
-    private DataSet insertFitnessDistanceData() {
-        Log.i(TAG, "Creating a new data insert request.");
-
-        // [START build_insert_data_request]
-        // Set a start and end time for our data, using a start time of 1 hour before this moment.
-        Calendar cal = Calendar.getInstance();
-        Date now = new Date();
-        cal.setTime(now);
-        long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.HOUR_OF_DAY, -1);
-        long startTime = cal.getTimeInMillis();
-
-        // Create a data source
-        DataSource dataSource =
-                new DataSource.Builder()
-                        .setAppPackageName(this)
-                        .setDataType(DataType.TYPE_DISTANCE_DELTA)
-                        .setStreamName(TAG + " - step count")
-                        .setType(DataSource.TYPE_RAW)
-                        .build();
-
-        // Create a data set
-        int stepCountDelta = 950;
-        DataSet dataSet = DataSet.create(dataSource);
-        // For each data point, specify a start time, end time, and the data value -- in this case,
-        // the number of new steps.
-        DataPoint dataPoint =  dataSet.createDataPoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS);
-        dataPoint.getValue(Field.FIELD_DISTANCE).setInt(stepCountDelta);
-        dataSet.add(dataPoint);
-        // [END build_insert_data_request]
-
-        return dataSet;
-    }
-
-
     /**
      * Asynchronous task to read the history data. When the task succeeds, it will print out the data.
      */
@@ -291,6 +277,8 @@ public class ListDataActivity extends AppCompatActivity {
                             }
                         });
     }
+
+
 
     /**
      * Returns a {@link DataReadRequest} for all step count changes in the past week.

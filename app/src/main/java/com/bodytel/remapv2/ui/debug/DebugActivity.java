@@ -22,6 +22,7 @@ import com.bodytel.remapv2.data.local.service.FitJobService;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.audiosample.AudioSampleActivity;
+import com.bodytel.remapv2.ui.base.ServiceConnectionActivity;
 import com.bodytel.remapv2.ui.bdisurvey.StoreBdiSurveyActivity;
 import com.bodytel.remapv2.ui.listdata.GoogleFitDistanceActivity;
 import com.bodytel.remapv2.ui.listdata.ListDataActivity;
@@ -33,7 +34,7 @@ import com.bodytel.remapv2.ui.moodsurvey.MoodSurveyActivity;
 import com.bodytel.remapv2.ui.audiosample.NewAudioSampleActivity;
 import com.bodytel.remapv2.ui.sleepsurvey.SleepSurveyActivity;
 
-public class DebugActivity extends AppCompatActivity {
+public class DebugActivity extends ServiceConnectionActivity {
 
     private TextView txtSubjectId;
 
@@ -53,7 +54,7 @@ public class DebugActivity extends AppCompatActivity {
         prefGlobal = PrefHelper.providePrefGlobal();
         txtSubjectId.setText(prefGlobal.getSubjectId());
 
-        initFitnessApiAndCheckPermission();
+        //initFitnessApiAndCheckPermission();
     }
 
     @Override
@@ -114,7 +115,7 @@ public class DebugActivity extends AppCompatActivity {
 
     }
 
-
+/*
     private void initFitnessApiAndCheckPermission() {
         FitnessOptions options = FitnessOptions.builder()
                 .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
@@ -158,5 +159,5 @@ public class DebugActivity extends AppCompatActivity {
                 Log.e("MyJobservice", "Job failed");
             }
         }
-    }
+    }*/
 }

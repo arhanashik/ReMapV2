@@ -174,7 +174,7 @@ public class GoogleFitDistanceActivity extends AppCompatActivity {
 
         protected Void doInBackground(GoogleApiClient... clients) {
 
-            PendingResult<DataReadResult> result = Fitness.HistoryApi.readData(clients[0], queryFitnessData());
+            PendingResult<DataReadResult> result = Fitness.HistoryApi.readData(clients[0], queryDistanceFitnessData());
 
             DataReadResult totalResult = result.await(30, TimeUnit.SECONDS);
 
@@ -227,12 +227,12 @@ public class GoogleFitDistanceActivity extends AppCompatActivity {
     /**
      * Returns a {@link DataReadRequest} for all step count changes in the past week.
      */
-    public DataReadRequest queryFitnessData() {
+    public DataReadRequest queryDistanceFitnessData() {
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
         long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.WEEK_OF_YEAR, -1);
+        cal.add(Calendar.DAY_OF_MONTH, -1);
         long startTime = cal.getTimeInMillis();
 
         DateFormat dateFormat = getDateInstance();
