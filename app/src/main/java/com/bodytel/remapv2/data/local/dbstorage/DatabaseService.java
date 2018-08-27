@@ -3,6 +3,7 @@ package com.bodytel.remapv2.data.local.dbstorage;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
 import com.bodytel.remapv2.R;
@@ -25,6 +26,7 @@ import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModelDao;
         MoodSurveyResultModel.class
         },
         version = 1, exportSchema = false)
+@TypeConverters(DataTypeConverter.class)
 public abstract class DatabaseService extends RoomDatabase {
     private static volatile DatabaseService sInstance;
 
