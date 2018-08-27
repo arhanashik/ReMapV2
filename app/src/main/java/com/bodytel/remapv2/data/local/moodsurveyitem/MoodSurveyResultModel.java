@@ -1,15 +1,31 @@
 package com.bodytel.remapv2.data.local.moodsurveyitem;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+import com.bodytel.remapv2.data.local.dbstorage.ColumnNames;
+import com.bodytel.remapv2.data.local.dbstorage.TableNames;
+
+@Entity(tableName = TableNames.TBL_MOOD_SURVEY)
 public class MoodSurveyResultModel {
-    private int id;
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = ColumnNames.ID)
+    private long id;
+    @ColumnInfo(name = ColumnNames.DATA_ID)
     private String dataId;
+    @ColumnInfo(name = ColumnNames.SUBJECT_ID)
     private String subjectId;
+    @ColumnInfo(name = ColumnNames.CREATED_AT)
     private Long createdAt;
+    @ColumnInfo(name = ColumnNames.SURVEY_VERSION)
     private int surveyVersion;
+    @ColumnInfo(name = ColumnNames.ANSWER)
     private int answer;
+    @ColumnInfo(name = ColumnNames.IS_SYNC)
     private boolean isSync;
 
-    public MoodSurveyResultModel(int id, String dataId, String subjectId, Long createdAt, int surveyVersion, int answer, boolean isSync) {
+    public MoodSurveyResultModel(long id, String dataId, String subjectId, Long createdAt, int surveyVersion, int answer, boolean isSync) {
         this.id = id;
         this.dataId = dataId;
         this.subjectId = subjectId;
@@ -19,11 +35,11 @@ public class MoodSurveyResultModel {
         this.isSync = isSync;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

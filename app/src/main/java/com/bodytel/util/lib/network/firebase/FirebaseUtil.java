@@ -1,35 +1,25 @@
 package com.bodytel.util.lib.network.firebase;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.bodytel.ReMapApp;
-import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
 import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModel;
-import com.bodytel.remapv2.ui.audiosample.NewAudioSampleActivity;
-import com.bodytel.remapv2.ui.bdisurvey.BdiSurveyEndFragment;
 import com.bodytel.util.lib.network.callback.DownloadAudioSampleCallBack;
 import com.bodytel.util.lib.network.callback.GetAudioSampleCallBack;
 import com.bodytel.util.lib.network.callback.StoreAudioSampleCallback;
 import com.bodytel.util.lib.network.callback.StoreBdiSurveyCallback;
 import com.bodytel.util.lib.network.callback.StoreMoodSurveyCallback;
 import com.bodytel.util.lib.network.callback.StoreSleepSurveyCallback;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -133,28 +123,22 @@ public class FirebaseUtil {
     public void downloadAudioSample(String downloadUrl, String fileName, DownloadAudioSampleCallBack callBack){
         fileDb = storageReference.child("audio/" + fileName);
 
-        final String filePath = Objects.requireNonNull(ReMapApp.getContext().getExternalCacheDir())
-                .getAbsolutePath() +"/" + fileName;
-        File tempFile;
+        final File outputDir = Objects.requireNonNull(ReMapApp.getContext().getExternalCacheDir());
 
-        try {
-            //File localFile = new File(filePath);
-            tempFile = File.createTempFile(fileName.substring(0, fileName.indexOf(".")), "m4a");
-            if(tempFile.exists()) {
-                callBack.onDownloadAudioSampleSuccessfully(filePath, "File exists in local directory");
-            }
-            else {
-                fileDb.getFile(tempFile).addOnSuccessListener(taskSnapshot -> {
-                    callBack.onDownloadAudioSampleSuccessfully(filePath, "File downloaded successfully");
+        File localFile = new File(outputDir, fileName);
 
-                }).addOnFailureListener(e -> {
-                    e.printStackTrace();
-                    callBack.onDownloadAudioSampleFailed(e.getMessage());
-                });
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            callBack.onDownloadAudioSampleFailed(e.getMessage());
+        if(localFile.exists() && localFile.length() > 0) {
+            callBack.onDownloadAudioSampleSuccessfully(localFile.getAbsolutePath(),
+                    "File exists in local directory: " + localFile.length() + " byte");
+        } else {
+            fileDb.getFile(localFile)
+                    .addOnSuccessListener(taskSnapshot ->
+                            callBack.onDownloadAudioSampleSuccessfully(localFile.getAbsolutePath(),
+                                    "File downloaded successfully: " + localFile.length() + " byte"))
+                    .addOnFailureListener(e -> {
+                        e.printStackTrace();
+                        callBack.onDownloadAudioSampleFailed(e.getMessage());
+                    });
         }
     }
 
