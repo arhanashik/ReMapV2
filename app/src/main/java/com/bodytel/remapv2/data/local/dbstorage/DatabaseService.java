@@ -6,11 +6,23 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.bodytel.remapv2.R;
+import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
+import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModelDao;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModelDao;
+import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
+import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModelDao;
+import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
+import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModelDao;
+import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModel;
+import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModelDao;
 
 @Database(entities = {
-        AudioSampleModel.class
+        AudioSampleModel.class,
+        BdiSurveyResultModel.class,
+        AccelerometerDataModel.class,
+        SleepSurveyResultModel.class,
+        MoodSurveyResultModel.class
         },
         version = 1, exportSchema = false)
 public abstract class DatabaseService extends RoomDatabase {
@@ -21,7 +33,7 @@ public abstract class DatabaseService extends RoomDatabase {
         return sInstance;
     }
 
-    public static synchronized DatabaseService init(Context context) {
+    public static synchronized void init(Context context) {
 
         if (sInstance == null) {
             synchronized (DatabaseService.class) {
@@ -30,8 +42,15 @@ public abstract class DatabaseService extends RoomDatabase {
             }
         }
 
-        return sInstance;
     }
 
     public abstract AudioSampleModelDao audioSampleModelDao();
+
+    public abstract BdiSurveyResultModelDao bdiSurveyResultModelDao();
+
+    public abstract AccelerometerDataModelDao accelerometerDataModelDao();
+
+    public abstract SleepSurveyResultModelDao sleepSurveyResultModelDao();
+
+    public abstract MoodSurveyResultModelDao moodSurveyResultModelDao();
 }

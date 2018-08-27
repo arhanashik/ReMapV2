@@ -141,7 +141,7 @@ public class AudioSampleActivity extends AppCompatActivity implements AudioSampl
     private void showProgress(boolean show){
         if(progressDialog == null) {
             progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Storing data...");
+            progressDialog.setMessage("Loading data...");
         }
 
         if(show) {
@@ -150,25 +150,4 @@ public class AudioSampleActivity extends AppCompatActivity implements AudioSampl
             if(progressDialog.isShowing()) progressDialog.dismiss();
         }
     }
-
-//    private void initFitnessApiAndCheckPermission() {
-//        FitnessOptions options = FitnessOptions.builder()
-//                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-//                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-//                .build();
-//
-//        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), options)) {
-//            GoogleSignIn.requestPermissions(this, REQUEST_OAUTH_REQUEST_CODE,
-//                    GoogleSignIn.getLastSignedInAccount(this), options);
-//        }
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (resultCode == Activity.RESULT_OK) {
-//            if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
-//
-//            }
-//        }
-//    }
 }

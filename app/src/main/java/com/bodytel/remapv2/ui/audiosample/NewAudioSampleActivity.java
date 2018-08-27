@@ -200,8 +200,7 @@ public class NewAudioSampleActivity extends AppCompatActivity implements OnNewAu
         try {
             mRecorder.prepare();
         } catch (IOException e) {
-            String LOG_TAG = "AudioRecordTest";
-            Log.e(LOG_TAG, "prepare() failed");
+            Log.e("startRecording()", "prepare() failed");
         }
 
         mRecorder.start();

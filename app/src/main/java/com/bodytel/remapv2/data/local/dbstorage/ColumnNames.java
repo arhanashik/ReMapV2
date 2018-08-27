@@ -10,5 +10,8 @@ public interface ColumnNames {
     String SURVEY_VERSION = "survey_version";
     String ANSWERS = "answers";
     String ANSWER = "answer";
+    String X_MEAN = "x_mean";
+    String Y_MEAN = "y_mean";
+    String Z_MEAN = "z_mean";
     String IS_SYNC = "is_sync";
 }
