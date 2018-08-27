@@ -8,18 +8,25 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
+import com.bodytel.remapv2.data.local.listdata.SensorModel;
 
-public class ReMapService extends Service {
+public class ReMapService extends Service implements SensorEventListener {
     /**
      * Command to the service to display a message
      */
@@ -38,10 +45,22 @@ public class ReMapService extends Service {
     private boolean mIsForeground = false;
     private int mVisibleActivities = 0;
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
 
+    private volatile float totalX = 0.0f, totalY = 0.0f, totalZ = 0.0f;
+    private volatile float itemCount = 0.0f;
+
+    private Handler handler;
+    private HandlerThread handlerThread;
     @Override
     public void onCreate() {
         super.onCreate();
+
+        handlerThread = new HandlerThread("min_count");
+        handlerThread.start();
+
+        handler = new Handler(handlerThread.getLooper());
 
         Intent stopForegroundIntent = new Intent(this, ReMapService.class);
         stopForegroundIntent.setAction(STOP_FOREGROUND_ACTION);
@@ -69,7 +88,41 @@ public class ReMapService extends Service {
                 .setOngoing(true)
                 .setNumber(100)
                 .build();
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        if (mSensorManager != null) {
+            mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        }
+
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
+
+
+    private void calculateMin(){
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Log.e("SensorActivity","Min X ="+totalX/itemCount+" Min Y ="+totalY/itemCount+" Min Z ="+totalZ/itemCount);
+
+                long time = System.currentTimeMillis();
+                float X = totalX/itemCount;
+                float Y = totalY/itemCount;
+                float Z = totalZ/itemCount;
+
+                String value = "("+String.format("%.2f", X)+", "+String.format("%.2f", Y)+", "+String.format("%.2f",Z)+")";
+                Log.e("ReMapService","Time ="+time+" value ="+value);
+
+                totalX = 0.0f;
+                totalY = 0.0f;
+                totalZ = 0.0f;
+                itemCount = 0.0f;
+                calculateMin();
+            }
+        }, 1000);
+    }
+
 
     /**
      * Handler of incoming messages from clients.
@@ -136,7 +189,25 @@ public class ReMapService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
         android.os.Process.killProcess(android.os.Process.myPid());
+        mSensorManager.unregisterListener(this);
+    }
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float mSensorX = event.values[0];
+        float mSensorY = event.values[1];
+        float mSensorZ = event.values[2];
+
+        itemCount ++;
+        totalX = totalX+mSensorX;
+        totalY = totalY + mSensorY;
+        totalZ = totalZ + mSensorZ;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
