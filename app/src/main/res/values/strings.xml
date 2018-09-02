@@ -84,4 +84,7 @@
     <string name="label_before_start_audio_sample">Please wait while we check the background noise level</string>
     <string name="label_progress">Starting activity in</string>
     <string name="description_ic_play">Play Icon</string>
+    <string name="min_mood_value">0</string>
+    <string name="max_mood_value">10</string>
+    <string name="max_sleep_value">13</string>
 </resources>

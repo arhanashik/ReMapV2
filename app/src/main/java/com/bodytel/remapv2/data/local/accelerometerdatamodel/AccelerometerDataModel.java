@@ -23,8 +23,7 @@ public class AccelerometerDataModel {
     @ColumnInfo(name = ColumnNames.IS_SYNC)
     private boolean isSync;
 
-    public AccelerometerDataModel(long id, Long createdAt, float xMean, float yMean, float zMean, boolean isSync) {
-        this.id = id;
+    public AccelerometerDataModel(Long createdAt, float xMean, float yMean, float zMean, boolean isSync) {
         this.createdAt = createdAt;
         this.xMean = xMean;
         this.yMean = yMean;

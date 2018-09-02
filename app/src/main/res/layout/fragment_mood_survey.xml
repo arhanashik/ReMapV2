@@ -20,23 +20,59 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_mood_survey_rv_num_picker"
-        android:layout_width="@dimen/space_0dp"
+    <TextView
+        android:id="@+id/fragment_mood_survey_txt_max_mood"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingStart="183dp"
-        android:paddingEnd="183dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="@dimen/space_50dp"
+        android:text="@string/max_mood_value"
+        android:textSize="@dimen/text_large_title"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintTop_toTopOf="@+id/fragment_mood_survey_sb_mood_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.bodytel.util.lib.verticalseekbar.VerticalSeekBar
+        android:id="@+id/fragment_mood_survey_sb_mood_selector"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/space_10dp"
+        android:max="10"
+        android:progress="4"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_mood_survey_txt_question"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@+id/fragment_mood_survey_btn_next"/>
+
+    <TextView
+        android:id="@+id/fragment_mood_survey_txt_selected_mood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_50dp"
+        android:textSize="@dimen/text_large_title"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/fragment_mood_survey_txt_min_mood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_50dp"
+        android:text="@string/min_mood_value"
+        android:textSize="@dimen/text_large_title"
+        android:textColor="@color/colorBlack"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_mood_survey_sb_mood_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/fragment_mood_survey_btn_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/space_30dp"
+        android:layout_marginBottom="@dimen/space_20dp"
         android:paddingStart="@dimen/space_40dp"
         android:paddingEnd="@dimen/space_40dp"
         android:text="@string/label_next"

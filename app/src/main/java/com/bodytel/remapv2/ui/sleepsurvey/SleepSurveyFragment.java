@@ -4,26 +4,19 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearSnapHelper;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
-import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
-import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
-import com.bodytel.util.lib.horizontalpickerlib.PickerLayoutManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class SleepSurveyFragment extends Fragment {
 
-    private RecyclerView rvNumPicker;
+    //private RecyclerView rvNumPicker;
+    private TextView tvSelectedSleep;
 
     private OnSleepSurveyEvent mEvent;
     private int hourOfSleep = -1;
@@ -37,24 +30,41 @@ public class SleepSurveyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sleep_survey, container, false);
 
-        rvNumPicker = view.findViewById(R.id.fragment_sleep_survey_rv_num_picker);
+        //rvNumPicker = view.findViewById(R.id.fragment_sleep_survey_rv_num_picker);
+        SeekBar seekBarSleepSelector = view.findViewById(R.id.fragment_sleep_survey_sb_sleep_selector);
+        tvSelectedSleep = view.findViewById(R.id.fragment_sleep_survey_txt_selected_sleep);
 
-        view.findViewById(R.id.fragment_sleep_survey_btn_next).setOnClickListener(new View.OnClickListener() {
+        seekBarSleepSelector.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onClick(View v) {
-                if(hourOfSleep == -1) Toast.makeText(getContext(), "Please pick a answer first", Toast.LENGTH_SHORT).show();
-                else {
-                    mEvent.onSleepSurveyAnswer(hourOfSleep);
-                }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                hourOfSleep = progress;
+                tvSelectedSleep.setText(String.valueOf(hourOfSleep));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
 
-        initView();
+        view.findViewById(R.id.fragment_sleep_survey_btn_next).setOnClickListener(v -> {
+            if(hourOfSleep == -1) Toast.makeText(getContext(), "Please pick a answer first", Toast.LENGTH_SHORT).show();
+            else {
+                mEvent.onSleepSurveyAnswer(hourOfSleep);
+            }
+        });
+
+        //initView();
 
         return view;
     }
 
-    boolean defaultScroll = true;
+    /*boolean defaultScroll = true;
     private void initView(){
         PickerLayoutManager pickerLayoutManager = new PickerLayoutManager(getContext(), PickerLayoutManager.HORIZONTAL, false);
         pickerLayoutManager.setChangeAlpha(true);
@@ -90,5 +100,5 @@ public class SleepSurveyFragment extends Fragment {
             data.add(String.valueOf(i));
         }
         return data;
-    }
+    }*/
 }

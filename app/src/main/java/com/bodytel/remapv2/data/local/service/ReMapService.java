@@ -124,28 +124,22 @@ public class ReMapService extends Service implements SensorEventListener {
                 float Y = NumberUtil.floorToOneDecimalPoint(totalY / itemCount);
                 float Z = NumberUtil.floorToOneDecimalPoint(totalZ / itemCount);
 
-                String value = "(" + X + ", " + Y + ", " + Z + ")";
-
                 if (lastX != X || lastY != Y || lastZ != Z) {
                     AccelerometerDataModel model = new AccelerometerDataModel(
-                            0,
                             time,
                             X,
                             Y,
                             Z,
                             false
                     );
-
                     accelerometerDataService.insert(model);
-
                     lastX = X;
                     lastY = Y;
                     lastZ = Z;
 
+                    String value = "(" + model.getXMean() + ", " + model.getYMean() + ", " + model.getZMean() + ")";
                     Log.e("ReMapService", "Time =" + time + " value =" + value);
                 }
-
-
 
                 totalX = 0.0f;
                 totalY = 0.0f;
