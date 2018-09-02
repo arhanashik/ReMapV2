@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.bodytel.ReMapApp;
 import com.bodytel.remapv2.data.local.AppConst;
+import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
@@ -14,6 +15,7 @@ import com.bodytel.util.lib.network.callback.GetAudioSampleCallBack;
 import com.bodytel.util.lib.network.callback.StoreAudioSampleCallback;
 import com.bodytel.util.lib.network.callback.StoreBdiSurveyCallback;
 import com.bodytel.util.lib.network.callback.StoreMoodSurveyCallback;
+import com.bodytel.util.lib.network.callback.StoreSensorDataCallback;
 import com.bodytel.util.lib.network.callback.StoreSleepSurveyCallback;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -161,6 +163,27 @@ public class FirebaseUtil {
         }catch (Exception e){
             e.printStackTrace();
             callBack.onStoreBdiSurveyDataFailure(e.getMessage());
+        }
+    }
+
+    public void storeSensorData(String subjectId, List<AccelerometerDataModel> dataModels, StoreSensorDataCallback callback){
+        try {
+            firestoreDb.collection(AppConst.COLLECTION_SENSOR_DATA)
+                    .add(FirebaseMapper.sensorDataToMap(subjectId, dataModels))
+                    .addOnSuccessListener(documentReference -> {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+
+                        callback.onStoreSensorDataSuccessfully(documentReference.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w(TAG, "Error adding document", e);
+
+                        callback.onStoreSensorDataFailure(e.getMessage());
+                    });
+
+        }catch (Exception e){
+            e.printStackTrace();
+            callback.onStoreSensorDataFailure(e.getMessage());
         }
     }
 

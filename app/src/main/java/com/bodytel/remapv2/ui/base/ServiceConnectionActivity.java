@@ -10,11 +10,21 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.view.View;
 
+import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.service.ReMapService;
+import com.bodytel.util.lib.worker.StoreSensorDataWorker;
+
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 public abstract class ServiceConnectionActivity extends AppCompatActivity {
+
+    private WorkManager mWorkManager;
 
     /** Messenger for communicating with the service. */
     Messenger mService = null;
@@ -43,6 +53,9 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mWorkManager = WorkManager.getInstance();
+
+        sendDataToFirestore();
     }
 
     @Override
@@ -87,5 +100,38 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+    }
+
+
+    void sendDataToFirestore() {
+
+        // Create charging constraint
+        Constraints constraints = new Constraints.Builder()
+                //.setRequiresCharging(true)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        // Add WorkRequest to save the image to the filesystem
+//        OneTimeWorkRequest storeData = new OneTimeWorkRequest.Builder(StoreSensorDataWorker.class)
+//                .setConstraints(constraints)
+//                .addTag(AppConst.JOB_TAG_SEND_DATA_TO_REMOTE)
+//                .build();
+
+        // Add WorkRequest to Cleanup temporary images
+//        WorkContinuation continuation = mWorkManager
+//                .beginUniqueWork(AppConst.JOB_TAG_SEND_DATA_TO_REMOTE,
+//                        ExistingWorkPolicy.REPLACE, storeData);
+
+        //continuation = continuation.then(save);
+
+        // Actually start the work
+        //continuation.enqueue();
+
+        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest
+                .Builder(StoreSensorDataWorker.class, 6, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .addTag(AppConst.JOB_TAG_SEND_DATA_TO_REMOTE)
+                .build();
+        mWorkManager.enqueue(periodicWork);
     }
 }

@@ -65,6 +65,9 @@ dependencies {
     // Lifecycle components
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+
+    //worker manager
+    implementation "android.arch.work:work-runtime:$versions.work"
 }
 
 apply plugin: 'com.google.gms.google-services'

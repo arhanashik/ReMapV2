@@ -22,14 +22,15 @@ public class FileUtil {
 
     public static void addNewLogOnSD() {
         try {
-            File root = new File(Environment.getExternalStorageDirectory(), "job_dispatcher");
+            File root = new File(Environment.getExternalStorageDirectory(), "remapV2");
             if (!root.exists()) {
                 Log.d("file util", "file not exists: " + "create new");
-                root.mkdirs();
+                boolean created = root.mkdirs();
+                Log.d("file util", "file not exists: " + "created new: " + created);
             }
-            File gpxfile = new File(root, "job_dispatcher_log.txt");
+            File gpxfile = new File(root, "log.txt");
             FileWriter writer = new FileWriter(gpxfile, true);
-            String strToWrite = "\nJob dispatcher log on: " + DateFormat.getTimeFormat(ReMapApp.getContext())
+            String strToWrite = "\nWorker manager log on: " + DateFormat.getTimeFormat(ReMapApp.getContext())
                     .format(System.currentTimeMillis());
             writer.append(strToWrite);
             writer.flush();

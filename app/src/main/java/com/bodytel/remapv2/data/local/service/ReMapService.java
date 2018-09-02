@@ -18,7 +18,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -27,7 +26,6 @@ import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
 import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataService;
 import com.bodytel.remapv2.data.local.dbstorage.DatabaseHelper;
-import com.bodytel.remapv2.data.local.listdata.SensorModel;
 import com.bodytel.util.helper.NumberUtil;
 
 public class ReMapService extends Service implements SensorEventListener {

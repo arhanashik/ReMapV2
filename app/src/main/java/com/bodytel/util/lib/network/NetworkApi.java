@@ -1,5 +1,6 @@
 package com.bodytel.util.lib.network;
 
+import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
 import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModel;
@@ -8,8 +9,11 @@ import com.bodytel.util.lib.network.callback.GetAudioSampleCallBack;
 import com.bodytel.util.lib.network.callback.StoreAudioSampleCallback;
 import com.bodytel.util.lib.network.callback.StoreBdiSurveyCallback;
 import com.bodytel.util.lib.network.callback.StoreMoodSurveyCallback;
+import com.bodytel.util.lib.network.callback.StoreSensorDataCallback;
 import com.bodytel.util.lib.network.callback.StoreSleepSurveyCallback;
 import com.bodytel.util.lib.network.firebase.FirebaseUtil;
+
+import java.util.List;
 
 public class NetworkApi {
     private static NetworkApi networkApi = null;
@@ -34,6 +38,10 @@ public class NetworkApi {
 
     public void storeBdiSurveyData(BdiSurveyResultModel resultModel, StoreBdiSurveyCallback callBack){
         FirebaseUtil.on().storeBdiSurveyResult(resultModel, callBack);
+    }
+
+    public void storeSensorData(String subjectId, List<AccelerometerDataModel> dataModels, StoreSensorDataCallback callback){
+        FirebaseUtil.on().storeSensorData(subjectId, dataModels, callback);
     }
 
     public void storeSleepSurveyData(SleepSurveyResultModel resultModel, StoreSleepSurveyCallback callback){

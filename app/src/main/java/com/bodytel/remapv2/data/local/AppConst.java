@@ -7,8 +7,9 @@ public interface AppConst {
     int TYPE_AUDIO_SAMPLE = 3;
     int TYPE_ACCELEROMETER_DATA = 4;
 
-    String COLLECTION_BDI_SURVEY_DATA = "bdi_survey_data";
     String COLLECTION_AUDIO_SAMPLE_DATA = "audio_sample_data";
+    String COLLECTION_BDI_SURVEY_DATA = "bdi_survey_data";
+    String COLLECTION_SENSOR_DATA = "sensor_data";
     String COLLECTION_SLEEP_SURVEY_DATA = "sleep_survey_data";
     String COLLECTION_MOOD_SURVEY_DATA = "mood_survey_data";
 
@@ -20,6 +21,7 @@ public interface AppConst {
     String ANSWER = "answer";
     String FILE_NAME = "file_name";
     String DOWNLOAD_URL = "download_url";
+    String DATA = "data";
 
     int REQUEST_CODE_RECORD_AUDIO = 11;
 
