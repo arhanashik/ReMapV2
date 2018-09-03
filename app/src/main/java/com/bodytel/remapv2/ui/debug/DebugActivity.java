@@ -1,5 +1,6 @@
 package com.bodytel.remapv2.ui.debug;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -27,6 +28,7 @@ import com.bodytel.remapv2.ui.bdisurvey.StoreBdiSurveyActivity;
 import com.bodytel.remapv2.ui.listdata.GoogleFitDistanceActivity;
 import com.bodytel.remapv2.ui.listdata.ListDataActivity;
 import com.bodytel.remapv2.ui.listdata.SensorActivity;
+import com.bodytel.util.helper.PermissionUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.DataType;
@@ -53,8 +55,9 @@ public class DebugActivity extends ServiceConnectionActivity {
 
         prefGlobal = PrefHelper.providePrefGlobal();
         txtSubjectId.setText(prefGlobal.getSubjectId());
-
-        //initFitnessApiAndCheckPermission();
+        if(PermissionUtil.getInstance().isPermitted(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            initFitnessApiAndCheckPermission();
+        }
     }
 
     @Override
@@ -115,7 +118,7 @@ public class DebugActivity extends ServiceConnectionActivity {
 
     }
 
-/*
+
     private void initFitnessApiAndCheckPermission() {
         FitnessOptions options = FitnessOptions.builder()
                 .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
@@ -159,5 +162,5 @@ public class DebugActivity extends ServiceConnectionActivity {
                 Log.e("MyJobservice", "Job failed");
             }
         }
-    }*/
+    }
 }
