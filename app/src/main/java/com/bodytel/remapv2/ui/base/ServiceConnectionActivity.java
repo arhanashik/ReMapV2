@@ -1,5 +1,8 @@
 package com.bodytel.remapv2.ui.base;
 
+import android.Manifest;
+import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,7 +16,11 @@ import android.os.RemoteException;
 
 import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.service.ReMapService;
+import com.bodytel.util.helper.PermissionUtil;
 import com.bodytel.util.lib.worker.StoreSensorDataWorker;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataType;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,7 +32,7 @@ import androidx.work.WorkManager;
 public abstract class ServiceConnectionActivity extends AppCompatActivity {
 
     private WorkManager mWorkManager;
-
+    private final int REQUEST_OAUTH_REQUEST_CODE = 1;
     /** Messenger for communicating with the service. */
     Messenger mService = null;
 
@@ -54,8 +61,64 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mWorkManager = WorkManager.getInstance();
-
         sendDataToFirestore();
+
+        checkPermission();
+
+
+    }
+
+
+    private void checkPermission(){
+        if(PermissionUtil.getInstance().isPermitted(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            initFitnessApiAndCheckPermission();
+        }
+    }
+
+
+    private void initFitnessApiAndCheckPermission() {
+        FitnessOptions options = FitnessOptions.builder()
+                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                .addDataType(DataType.TYPE_DISTANCE_DELTA,  FitnessOptions.ACCESS_WRITE)
+                .addDataType(DataType.AGGREGATE_DISTANCE_DELTA, FitnessOptions.ACCESS_WRITE)
+                .build();
+
+        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), options)) {
+            GoogleSignIn.requestPermissions(this, REQUEST_OAUTH_REQUEST_CODE,
+                    GoogleSignIn.getLastSignedInAccount(this), options);
+        } else {
+            //insertAndReadData();
+            /**
+             * Start fitness data read here
+             *
+             *
+             */
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == PermissionUtil.PERMISSIONS_REQUEST){
+            checkPermission();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_OAUTH_REQUEST_CODE) {
+                //insertAndReadData();
+                //insertAndReadData();
+                /**
+                 * Start fitness data read here
+                 *
+                 *
+                 */
+            }
+        }
     }
 
     @Override
