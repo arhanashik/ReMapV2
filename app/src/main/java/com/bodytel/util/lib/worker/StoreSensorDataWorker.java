@@ -3,7 +3,6 @@ package com.bodytel.util.lib.worker;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.bodytel.ReMapApp;
 import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
@@ -56,7 +55,7 @@ public class StoreSensorDataWorker extends Worker implements StoreSensorDataCall
 
         // Makes a notification when the work starts and slows down the work so that it's easier to
         // see each WorkRequest start, even on emulated devices
-        WorkerUtils.makeStatusNotification("Storing sensor data", applicationContext);
+        WorkerUtils.makeStatusNotification("Worker thread for storing data", applicationContext);
 
         FileUtil.addNewLogOnSD();
 

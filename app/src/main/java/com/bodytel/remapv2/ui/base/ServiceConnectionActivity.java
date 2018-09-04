@@ -2,7 +2,10 @@ package com.bodytel.remapv2.ui.base;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,10 +16,10 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.widget.Toast;
 
 import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.service.ReMapService;
-import com.bodytel.util.helper.PermissionUtil;
 import com.bodytel.util.lib.worker.StoreSensorDataWorker;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.FitnessOptions;
@@ -61,20 +64,14 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mWorkManager = WorkManager.getInstance();
-        sendDataToFirestore();
 
-        checkPermission();
-
-
-    }
-
-
-    private void checkPermission(){
-        if(PermissionUtil.getInstance().isPermitted(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+        if(checkPermission()){
             initFitnessApiAndCheckPermission();
+            sendDataToFirestore();
+        }else {
+            requestPermissions();
         }
     }
-
 
     private void initFitnessApiAndCheckPermission() {
         FitnessOptions options = FitnessOptions.builder()
@@ -101,9 +98,37 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == PermissionUtil.PERMISSIONS_REQUEST){
-            checkPermission();
+
+        if(requestCode == AppConst.REQUEST_CODE_STORAGE_PERMISSION){
+            if(grantResults.length > 0){
+                for(int res : grantResults){
+                    if(res != PackageManager.PERMISSION_GRANTED) {
+                        requestPermissions();
+                        break;
+                    }
+                }
+                initFitnessApiAndCheckPermission();
+                sendDataToFirestore();
+            }else {
+                Toast.makeText(this, "Permission needed", Toast.LENGTH_SHORT).show();
+                requestPermissions();
+            }
         }
+    }
+
+    private boolean checkPermission(){
+        return ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions(){
+        ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                AppConst.REQUEST_CODE_STORAGE_PERMISSION);
     }
 
     @Override

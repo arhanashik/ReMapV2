@@ -24,6 +24,7 @@ public interface AppConst {
     String DATA = "data";
 
     int REQUEST_CODE_RECORD_AUDIO = 11;
+    int REQUEST_CODE_STORAGE_PERMISSION = 22;
 
     String JOB_TAG_SEND_DATA_TO_REMOTE = "com.bodytel.remapv2-job";
 }
