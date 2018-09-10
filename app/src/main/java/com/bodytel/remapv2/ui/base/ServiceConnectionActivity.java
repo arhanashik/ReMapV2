@@ -20,7 +20,10 @@ import android.widget.Toast;
 
 import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.service.ReMapService;
+import com.bodytel.util.lib.worker.FitDataCollectorWorker;
+import com.bodytel.util.lib.worker.StoreDistanceDataWorker;
 import com.bodytel.util.lib.worker.StoreSensorDataWorker;
+import com.bodytel.util.lib.worker.StoreStepsDataWorker;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.data.DataType;
@@ -33,8 +36,6 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 public abstract class ServiceConnectionActivity extends AppCompatActivity {
-
-    private WorkManager mWorkManager;
     private final int REQUEST_OAUTH_REQUEST_CODE = 1;
     /** Messenger for communicating with the service. */
     Messenger mService = null;
@@ -63,11 +64,8 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mWorkManager = WorkManager.getInstance();
-
         if(checkPermission()){
             initFitnessApiAndCheckPermission();
-            sendDataToFirestore();
         }else {
             requestPermissions();
         }
@@ -108,7 +106,6 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
                     }
                 }
                 initFitnessApiAndCheckPermission();
-                sendDataToFirestore();
             }else {
                 Toast.makeText(this, "Permission needed", Toast.LENGTH_SHORT).show();
                 requestPermissions();
@@ -188,38 +185,5 @@ public abstract class ServiceConnectionActivity extends AppCompatActivity {
         } catch (RemoteException e) {
             e.printStackTrace();
         }
-    }
-
-
-    void sendDataToFirestore() {
-
-        // Create charging constraint
-        Constraints constraints = new Constraints.Builder()
-                //.setRequiresCharging(true)
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build();
-
-        // Add WorkRequest to save the image to the filesystem
-//        OneTimeWorkRequest storeData = new OneTimeWorkRequest.Builder(StoreSensorDataWorker.class)
-//                .setConstraints(constraints)
-//                .addTag(AppConst.JOB_TAG_SEND_DATA_TO_REMOTE)
-//                .build();
-
-        // Add WorkRequest to Cleanup temporary images
-//        WorkContinuation continuation = mWorkManager
-//                .beginUniqueWork(AppConst.JOB_TAG_SEND_DATA_TO_REMOTE,
-//                        ExistingWorkPolicy.REPLACE, storeData);
-
-        //continuation = continuation.then(save);
-
-        // Actually start the work
-        //continuation.enqueue();
-
-        PeriodicWorkRequest periodicWork = new PeriodicWorkRequest
-                .Builder(StoreSensorDataWorker.class, 6, TimeUnit.HOURS)
-                .setConstraints(constraints)
-                .addTag(AppConst.JOB_TAG_SEND_DATA_TO_REMOTE)
-                .build();
-        mWorkManager.enqueue(periodicWork);
     }
 }

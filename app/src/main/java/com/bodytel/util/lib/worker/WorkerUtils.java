@@ -50,7 +50,7 @@ final class WorkerUtils {
 
         // Create the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.app_logo)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(Constants.NOTIFICATION_TITLE)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)

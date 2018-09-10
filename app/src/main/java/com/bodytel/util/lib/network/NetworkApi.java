@@ -2,6 +2,7 @@ package com.bodytel.util.lib.network;
 
 import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
+import com.bodytel.remapv2.data.local.fitdata.FitDataModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
 import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModel;
 import com.bodytel.util.lib.network.callback.DownloadAudioSampleCallBack;
@@ -22,6 +23,11 @@ public class NetworkApi {
         if(networkApi == null) networkApi = new NetworkApi();
 
         return networkApi;
+    }
+
+    public void storeStepsOrDistanceData(String dataType, List<FitDataModel> fitDataModels,
+                                         StoreSensorDataCallback callback){
+        FirebaseUtil.on().storeStepsOrDistanceData(dataType, fitDataModels, callback);
     }
 
     public void storeAudioSample(String subjectId, String filePath, String fileName, StoreAudioSampleCallback callback){

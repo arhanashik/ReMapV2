@@ -4,9 +4,10 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
-import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataService;
+import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.dbstorage.DatabaseHelper;
+import com.bodytel.remapv2.data.local.fitdata.FitDataModel;
+import com.bodytel.remapv2.data.local.fitdata.FitDataModelService;
 import com.bodytel.util.helper.FileUtil;
 import com.bodytel.util.lib.network.NetworkApi;
 import com.bodytel.util.lib.network.callback.StoreSensorDataCallback;
@@ -17,10 +18,10 @@ import java.util.List;
 
 import androidx.work.Worker;
 
-public class StoreSensorDataWorker extends Worker{
-    private static final String TAG = StoreSensorDataWorker.class.getSimpleName();
+public class StoreDistanceDataWorker extends Worker{
+    private static final String TAG = StoreDistanceDataWorker.class.getSimpleName();
 
-    private AccelerometerDataService dataService;
+    private FitDataModelService dataService;
 
     @NonNull
     @Override
@@ -32,14 +33,14 @@ public class StoreSensorDataWorker extends Worker{
         try {
             new Thread(()->{
 
-                dataService = DatabaseHelper.provideAccelerometerDataService();
-                List<AccelerometerDataModel> dataModels = dataService.getAllAccelerometerDataModel();
+                dataService = DatabaseHelper.provideFitDataModelService();
+                List<FitDataModel> dataModels = dataService.getDataListOfType(AppConst.DISTANCE);
 
                 if(dataModels != null && !dataModels.isEmpty()){
-                    NetworkApi.on().storeSensorData(dataModels, new StoreSensorDataCallback() {
+                    NetworkApi.on().storeStepsOrDistanceData(AppConst.DISTANCE, dataModels, new StoreSensorDataCallback() {
                         @Override
                         public void onStoreSensorDataSuccessfully(@NotNull String dataId) {
-                            Log.e(TAG, "ReMap Accelerometer Data stored: " + dataId);
+                            Log.e(TAG, "ReMap Distance Data stored: " + dataId);
                         }
 
                         @Override
@@ -47,15 +48,16 @@ public class StoreSensorDataWorker extends Worker{
                             Log.e(TAG, "ReMap error: " + error);
                         }
                     });
-                    dataService.deleteAllAccelerometerData();
-                    FileUtil.addNewLogOnSD("Total accelerometer data sent " + dataModels.size() + " items");
+                    dataService.deleteDataOfType(AppConst.DISTANCE);
+
+                    FileUtil.addNewLogOnSD("Total distance data sent " + dataModels.size() + " items");
                 }
 
             }).start();
 
             return Result.SUCCESS;
         } catch (Throwable throwable) {
-            Log.e(TAG, "Error storing accelerometer data", throwable);
+            Log.e(TAG, "Error storing distance data", throwable);
             FileUtil.addNewLogOnSD(throwable.getMessage());
             return Result.RETRY;
         }

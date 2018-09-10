@@ -4,6 +4,7 @@ import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
+import com.bodytel.remapv2.data.local.fitdata.FitDataModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
 import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModel;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,6 +21,31 @@ import java.util.List;
 import java.util.Map;
 
 public class FirebaseMapper {
+    public static Map<String, Object> stepOrDistanceModelToMap(List<FitDataModel> fitDataModels){
+        Map<String, Object> sensorData = new LinkedHashMap<>();
+
+        sensorData.put(AppConst.CREATED_AT, System.currentTimeMillis());
+
+        JSONArray array = new JSONArray();
+        for (FitDataModel dataModel : fitDataModels){
+            JSONObject object = new JSONObject();
+            try {
+                object.put("created", dataModel.getCreatedAt());
+                object.put("start", dataModel.getStart());
+                object.put("end", dataModel.getEnd());
+                object.put("value", dataModel.getValue());
+
+                array.put(object);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        sensorData.put(AppConst.DATA, array.toString());
+
+        return sensorData;
+    }
+
     public static Map<String, Object> audioSampleModelToMap(AudioSampleModel sampleModel){
         Map<String, Object> surveyData = new HashMap<>();
 

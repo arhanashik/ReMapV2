@@ -13,12 +13,15 @@ import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModelDao;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModelDao;
+import com.bodytel.remapv2.data.local.fitdata.FitDataModel;
+import com.bodytel.remapv2.data.local.fitdata.FitDataModelDao;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModelDao;
 import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModel;
 import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModelDao;
 
 @Database(entities = {
+        FitDataModel.class,
         AudioSampleModel.class,
         BdiSurveyResultModel.class,
         AccelerometerDataModel.class,
@@ -45,6 +48,8 @@ public abstract class DatabaseService extends RoomDatabase {
         }
 
     }
+
+    public abstract FitDataModelDao fitDataModelDao();
 
     public abstract AudioSampleModelDao audioSampleModelDao();
 

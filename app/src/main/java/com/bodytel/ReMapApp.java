@@ -25,7 +25,7 @@ public class ReMapApp extends Application{
 
         ScheduledJobHelper.on().init();
 
-        FirebaseUtil.on().init();
+        //FirebaseUtil.on().init();
     }
 
     public static Context getContext(){

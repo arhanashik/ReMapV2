@@ -5,6 +5,10 @@ public interface ColumnNames {
     String DATA_ID = "data_id";
     String SUBJECT_ID = "subject_id";
     String CREATED_AT = "created_at";
+    String TYPE = "type";
+    String START = "start";
+    String END = "end";
+    String VALUE = "value";
     String FILE_NAME = "file_name";
     String DOWNLOAD_URL = "download_url";
     String SURVEY_VERSION = "survey_version";

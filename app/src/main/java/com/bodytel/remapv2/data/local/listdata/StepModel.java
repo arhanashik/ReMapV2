@@ -24,16 +24,16 @@ public class StepModel {
 
     @PrimaryKey
     @ColumnInfo(name = "start_time")
-    private long startData;
+    private long startDate;
     @ColumnInfo(name = "end_time")
-    private long endTate;
+    private long endDate;
     @ColumnInfo(name = "steps")
     private int stepCount;
 
-    public StepModel(int stepCount, long startData, long endTate) {
+    public StepModel(int stepCount, long startDate, long endDate) {
         this.stepCount = stepCount;
-        this.startData = startData;
-        this.endTate = endTate;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public int getStepCount() {
@@ -44,19 +44,19 @@ public class StepModel {
         this.stepCount = stepCount;
     }
 
-    public long getStartData() {
-        return startData;
+    public long getStartDate() {
+        return startDate;
     }
 
-    public void setStartData(long startData) {
-        this.startData = startData;
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
     }
 
-    public long getEndTate() {
-        return endTate;
+    public long getEndDate() {
+        return endDate;
     }
 
-    public void setEndTate(long endTate) {
-        this.endTate = endTate;
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
     }
 }

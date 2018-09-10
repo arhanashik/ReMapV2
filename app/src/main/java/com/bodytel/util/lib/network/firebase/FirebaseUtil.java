@@ -1,6 +1,7 @@
 package com.bodytel.util.lib.network.firebase;
 
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.bodytel.ReMapApp;
@@ -8,6 +9,7 @@ import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataModel;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
+import com.bodytel.remapv2.data.local.fitdata.FitDataModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
@@ -34,27 +36,13 @@ public class FirebaseUtil {
 
     private static FirebaseUtil firebaseUtil = null;
 
+    private static PrefGlobal prefGlobal;
+
     private static DocumentReference documentReference;
     private static StorageReference storageReference, fileDb;
 
     private FirebaseUtil(){
 
-    }
-
-    public void init(){
-        PrefGlobal prefGlobal = PrefHelper.providePrefGlobal();
-        if(documentReference == null){
-            documentReference = FirebaseFirestore
-                    .getInstance()
-                    .collection(AppConst.ROOT)
-                    .document(prefGlobal.getSubjectId());
-        }
-        if(storageReference == null){
-            storageReference = FirebaseStorage
-                    .getInstance()
-                    .getReference()
-                    .child(prefGlobal.getSubjectId());
-        }
     }
 
     public static FirebaseUtil on(){
@@ -63,7 +51,64 @@ public class FirebaseUtil {
         return firebaseUtil;
     }
 
+    public void init(){
+        prefGlobal = PrefHelper.providePrefGlobal();
+
+        String subjectId = prefGlobal.getSubjectId();
+
+        if(documentReference == null && !TextUtils.isEmpty(subjectId)){
+            initFirestoreDocumentInstance(subjectId);
+        }
+
+        if(storageReference == null && !TextUtils.isEmpty(subjectId)){
+            initFirebaseStorageReference(subjectId);
+        }
+    }
+
+    private void initFirestoreDocumentInstance(String document){
+        documentReference = FirebaseFirestore
+                .getInstance()
+                .collection(AppConst.ROOT)
+                .document(document);
+    }
+
+    private void initFirebaseStorageReference(String child){
+        storageReference = FirebaseStorage
+                .getInstance()
+                .getReference()
+                .child(child);
+    }
+
+    public void storeStepsOrDistanceData(String dataType, List<FitDataModel> fitDataModels,
+                                         StoreSensorDataCallback callBack){
+        try {
+            if(documentReference == null) initFirestoreDocumentInstance(prefGlobal.getSubjectId());
+
+            String collection = AppConst.COLLECTION_STEPS_DATA;
+            if(!dataType.equals(AppConst.STEPS)) collection = AppConst.COLLECTION_DISTANCES_DATA;
+
+            documentReference.collection(collection)
+                    .add(FirebaseMapper.stepOrDistanceModelToMap(fitDataModels))
+                    .addOnSuccessListener(documentReference -> {
+                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+
+                        callBack.onStoreSensorDataSuccessfully(documentReference.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.w(TAG, "Error adding document", e);
+
+                        callBack.onStoreSensorDataFailure(e.getMessage());
+                    });
+
+        }catch (Exception e){
+            e.printStackTrace();
+            callBack.onStoreSensorDataFailure(e.getMessage());
+        }
+    }
+
     public void storeAudioSample(String subjectId, String filePath, String fileName, StoreAudioSampleCallback callback){
+        if(storageReference == null) initFirebaseStorageReference(prefGlobal.getSubjectId());
+
         Uri fileUri = Uri.fromFile(new File(filePath));
         fileDb = storageReference.child(fileName);
 
@@ -95,10 +140,10 @@ public class FirebaseUtil {
     }
 
     private void storeAudioSampleReference(AudioSampleModel sampleModel, StoreAudioSampleCallback callback){
-
-        Map<String, Object> data = FirebaseMapper.audioSampleModelToMap(sampleModel);
-
         try {
+            if(documentReference == null) initFirestoreDocumentInstance(prefGlobal.getSubjectId());
+
+            Map<String, Object> data = FirebaseMapper.audioSampleModelToMap(sampleModel);
             documentReference.collection(AppConst.COLLECTION_AUDIO_SAMPLE_DATA)
                     .add(data)
                     .addOnCompleteListener(task -> {
@@ -117,6 +162,8 @@ public class FirebaseUtil {
 
     public void getAudioSampleList(GetAudioSampleCallBack callBack){
         try{
+            if(documentReference == null) initFirestoreDocumentInstance(prefGlobal.getSubjectId());
+
             documentReference.collection(AppConst.COLLECTION_AUDIO_SAMPLE_DATA)
                     .get()
                     .addOnCompleteListener(task -> {
@@ -137,6 +184,8 @@ public class FirebaseUtil {
     }
 
     public void downloadAudioSample(String fileName, DownloadAudioSampleCallBack callBack){
+        if(storageReference == null) initFirebaseStorageReference(prefGlobal.getSubjectId());
+
         fileDb = storageReference.child(fileName);
 
         final File outputDir = Objects.requireNonNull(ReMapApp.getContext().getExternalCacheDir());
@@ -160,6 +209,8 @@ public class FirebaseUtil {
 
     public void storeBdiSurveyResult(BdiSurveyResultModel resultModel, StoreBdiSurveyCallback callBack){
         try {
+            if(documentReference == null) initFirestoreDocumentInstance(prefGlobal.getSubjectId());
+
             documentReference.collection(AppConst.COLLECTION_BDI_SURVEY_DATA)
                     .add(FirebaseMapper.bdiSurveyModelToMap(resultModel))
                     .addOnSuccessListener(documentReference -> {
@@ -182,6 +233,8 @@ public class FirebaseUtil {
 
     public void storeSensorData(List<AccelerometerDataModel> dataModels, StoreSensorDataCallback callback){
         try {
+            if(documentReference == null) initFirestoreDocumentInstance(prefGlobal.getSubjectId());
+
             documentReference.collection(AppConst.COLLECTION_SENSOR_DATA)
                     .add(FirebaseMapper.sensorDataToMap(dataModels))
                     .addOnSuccessListener(documentReference -> {
@@ -203,6 +256,8 @@ public class FirebaseUtil {
 
     public void storeSleepSurveyResult(SleepSurveyResultModel resultModel, StoreSleepSurveyCallback callback){
         try {
+            if(documentReference == null) initFirestoreDocumentInstance(prefGlobal.getSubjectId());
+
             documentReference.collection(AppConst.COLLECTION_SLEEP_SURVEY_DATA)
                     .add(FirebaseMapper.sleepSurveyModelToMap(resultModel))
                     .addOnSuccessListener(documentReference -> {
@@ -225,7 +280,9 @@ public class FirebaseUtil {
 
     public void storeMoodSurveyResult(MoodSurveyResultModel resultModel, StoreMoodSurveyCallback callback){
         try {
-            documentReference.collection(AppConst.COLLECTION_SLEEP_SURVEY_DATA)
+            if(documentReference == null) initFirestoreDocumentInstance(prefGlobal.getSubjectId());
+
+            documentReference.collection(AppConst.COLLECTION_MOOD_SURVEY_DATA)
                     .add(FirebaseMapper.moodSurveyModelToMap(resultModel))
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());

@@ -1,14 +1,11 @@
 package com.bodytel.remapv2.ui.listdata;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bodytel.remapv2.R;
-import com.bodytel.remapv2.data.local.listdata.ListDataModel;
 import com.bodytel.remapv2.data.local.listdata.StepModel;
 import com.bodytel.remapv2.ui.base.BaseAdapter;
 import com.bodytel.remapv2.ui.base.BaseViewHolder;
@@ -16,7 +13,6 @@ import com.bodytel.remapv2.ui.base.BaseViewHolder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -44,7 +40,7 @@ public class ListDataAdapter extends BaseAdapter<StepModel>{
         public void bind(StepModel item) {
             stepCount.setText(""+item.getStepCount());
 
-            String datevalue = getDate(item.getStartData())+", "+getOnlyTime(item.getStartData());
+            String datevalue = getDate(item.getStartDate())+", "+getOnlyTime(item.getStartDate());
 
             dateValue.setText(datevalue);
         }

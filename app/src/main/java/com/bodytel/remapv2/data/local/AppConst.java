@@ -8,6 +8,8 @@ public interface AppConst {
     int TYPE_ACCELEROMETER_DATA = 4;
 
     String ROOT = "users";
+    String COLLECTION_STEPS_DATA = "steps";
+    String COLLECTION_DISTANCES_DATA = "distances";
     String COLLECTION_AUDIO_SAMPLE_DATA = "audio_sample_data";
     String COLLECTION_BDI_SURVEY_DATA = "bdi_survey_data";
     String COLLECTION_SENSOR_DATA = "sensor_data";
@@ -24,8 +26,14 @@ public interface AppConst {
     String DOWNLOAD_URL = "download_url";
     String DATA = "data";
 
+    String STEPS = "steps";
+    String DISTANCE = "distance";
+
     int REQUEST_CODE_RECORD_AUDIO = 11;
     int REQUEST_CODE_STORAGE_PERMISSION = 22;
 
-    String JOB_TAG_SEND_DATA_TO_REMOTE = "com.bodytel.remapv2-job";
+    String JOB_TAG_COLLECT_FIT_DATA = "com.bodytel.remapv2-job.collect_fit_data";
+    String JOB_TAG_SEND_STEPS_DATA_TO_REMOTE = "com.bodytel.remapv2-job.send_steps_data";
+    String JOB_TAG_SEND_DISTANCE_DATA_TO_REMOTE = "com.bodytel.remapv2-job.send_distance_data";
+    String JOB_TAG_SEND_DATA_TO_REMOTE = "com.bodytel.remapv2-job.send_accelerometer_data";
 }

@@ -2,7 +2,6 @@ package com.bodytel.remapv2.ui.welcome;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,12 +11,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
+import com.bodytel.remapv2.data.local.AppConst;
 import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
 import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.ui.base.ServiceConnectionActivity;
 import com.bodytel.remapv2.ui.debug.DebugActivity;
+import com.bodytel.util.lib.network.firebase.FirebaseUtil;
+import com.bodytel.util.lib.worker.FitDataCollectorWorker;
+import com.bodytel.util.lib.worker.StoreDistanceDataWorker;
+import com.bodytel.util.lib.worker.StoreSensorDataWorker;
+import com.bodytel.util.lib.worker.StoreStepsDataWorker;
+
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 public class WelcomeActivity extends ServiceConnectionActivity {
+    private WorkManager mWorkManager;
 
     private TextView txtSubjectId;
 
@@ -26,8 +39,9 @@ public class WelcomeActivity extends ServiceConnectionActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_welcome);
+
+        mWorkManager = WorkManager.getInstance();
 
         txtSubjectId = findViewById(R.id.txt_subject_id);
 
@@ -37,11 +51,13 @@ public class WelcomeActivity extends ServiceConnectionActivity {
         if(TextUtils.isEmpty(subjectId)) inputSubjectId();
         else {
             txtSubjectId.setText(subjectId);
+
+            FirebaseUtil.on().init();
+            startFirestoreWorks();
         }
     }
 
     public void onClickDebug(View view){
-        //Toast.makeText(this, "Debug", Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, DebugActivity.class));
     }
 
@@ -58,23 +74,54 @@ public class WelcomeActivity extends ServiceConnectionActivity {
 
         final AlertDialog dialog = builder.create();
 
-        txtOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String subjectId = etSubjectId.getText().toString();
+        txtOk.setOnClickListener(v -> {
+            String subjectId = etSubjectId.getText().toString();
 
-                if(TextUtils.isEmpty(subjectId))
-                    Toast.makeText(WelcomeActivity.this, "Please, insert a valid subject ID", Toast.LENGTH_SHORT).show();
-                else {
-                    prefGlobal.setSubjectId(subjectId);
-                    prefGlobal.setBdiVersion("1.0");
-                    txtSubjectId.setText(subjectId);
-                    dialog.dismiss();
-                }
+            if(TextUtils.isEmpty(subjectId))
+                Toast.makeText(WelcomeActivity.this, "Please, insert a valid subject ID", Toast.LENGTH_SHORT).show();
+            else {
+                prefGlobal.setSubjectId(subjectId);
+                prefGlobal.setBdiVersion("1.0");
+                txtSubjectId.setText(subjectId);
+                dialog.dismiss();
+
+                FirebaseUtil.on().init();
+                startFirestoreWorks();
             }
         });
 
-
         dialog.show();
+    }
+
+    void startFirestoreWorks() {
+        Constraints constraints = new Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+
+        PeriodicWorkRequest periodicWork1 = new PeriodicWorkRequest
+                .Builder(FitDataCollectorWorker.class, 12, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .addTag(AppConst.JOB_TAG_COLLECT_FIT_DATA)
+                .build();
+
+        PeriodicWorkRequest periodicWork2 = new PeriodicWorkRequest
+                .Builder(StoreStepsDataWorker.class, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .addTag(AppConst.JOB_TAG_SEND_STEPS_DATA_TO_REMOTE)
+                .build();
+
+        PeriodicWorkRequest periodicWork3 = new PeriodicWorkRequest
+                .Builder(StoreDistanceDataWorker.class, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .addTag(AppConst.JOB_TAG_SEND_DISTANCE_DATA_TO_REMOTE)
+                .build();
+
+        PeriodicWorkRequest periodicWork4 = new PeriodicWorkRequest
+                .Builder(StoreSensorDataWorker.class, 6, TimeUnit.HOURS)
+                .setConstraints(constraints)
+                .addTag(AppConst.JOB_TAG_SEND_DATA_TO_REMOTE)
+                .build();
+
+        mWorkManager.enqueue(periodicWork1, periodicWork2, periodicWork3, periodicWork4);
     }
 }
