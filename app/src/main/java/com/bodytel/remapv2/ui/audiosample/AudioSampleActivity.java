@@ -12,8 +12,6 @@ import android.widget.Toast;
 
 import com.bodytel.remapv2.R;
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
-import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
-import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.util.lib.network.NetworkApi;
 import com.bodytel.util.lib.network.callback.DownloadAudioSampleCallBack;
 import com.bodytel.util.lib.network.callback.GetAudioSampleCallBack;
@@ -29,10 +27,6 @@ public class AudioSampleActivity extends AppCompatActivity implements AudioSampl
     private RecyclerView mRvAudioSamples;
     private AudioSampleAdapter mAdapter;
 
-    private final int REQUEST_OAUTH_REQUEST_CODE = 1;
-
-    private PrefGlobal prefGlobal;
-
     private String filePath = null;
     private MediaPlayer mPlayer = null;
 
@@ -46,14 +40,12 @@ public class AudioSampleActivity extends AppCompatActivity implements AudioSampl
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        prefGlobal = PrefHelper.providePrefGlobal();
-
         mRvAudioSamples = findViewById(R.id.activity_audio_samples_recycler_view);
 
         initView();
 
         showProgress(true);
-        NetworkApi.on().getAudioSample(prefGlobal.getSubjectId(), this);
+        NetworkApi.on().getAudioSample(this);
     }
 
     @Override
@@ -69,7 +61,7 @@ public class AudioSampleActivity extends AppCompatActivity implements AudioSampl
     @Override
     public void onClickPlayPause(AudioSampleModel sampleModel) {
         showProgress(true);
-        NetworkApi.on().downloadAudioSample(sampleModel.getDownloadUrl(), sampleModel.getFileName(), this);
+        NetworkApi.on().downloadAudioSample(sampleModel.getFileName(), this);
     }
 
     @Override

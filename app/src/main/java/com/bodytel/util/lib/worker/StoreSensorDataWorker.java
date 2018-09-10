@@ -39,10 +39,9 @@ import androidx.work.Worker;
 
 import static java.text.DateFormat.getDateInstance;
 import static java.text.DateFormat.getTimeInstance;
-public class StoreSensorDataWorker extends Worker implements StoreSensorDataCallback{
+public class StoreSensorDataWorker extends Worker{
     private static final String TAG = StoreSensorDataWorker.class.getSimpleName();
 
-    private PrefGlobal prefGlobal;
     private AccelerometerDataService dataService;
     private final String STEPS = "steps";
     private final String DISTANCE = "distance";
@@ -50,26 +49,32 @@ public class StoreSensorDataWorker extends Worker implements StoreSensorDataCall
     @NonNull
     @Override
     public Result doWork() {
-
         Context applicationContext = getApplicationContext();
 
         // Makes a notification when the work starts and slows down the work so that it's easier to
         // see each WorkRequest start, even on emulated devices
         WorkerUtils.makeStatusNotification("Worker thread for storing data", applicationContext);
 
-        FileUtil.addNewLogOnSD();
-
         try {
-            prefGlobal = PrefHelper.providePrefGlobal();
-
             new Thread(()->{
 
                 dataService = DatabaseHelper.provideAccelerometerDataService();
                 List<AccelerometerDataModel> dataModels = dataService.getAllAccelerometerDataModel();
 
                 if(dataModels != null && !dataModels.isEmpty()){
-                    NetworkApi.on().storeSensorData(prefGlobal.getSubjectId(), dataModels, this);
+                    NetworkApi.on().storeSensorData(dataModels, new StoreSensorDataCallback() {
+                        @Override
+                        public void onStoreSensorDataSuccessfully(@NotNull String dataId) {
+                            Log.e(TAG, "ReMap Data stored: " + dataId);
+                        }
+
+                        @Override
+                        public void onStoreSensorDataFailure(@NotNull String error) {
+                            Log.e(TAG, "ReMap error: " + error);
+                        }
+                    });
                     dataService.deleteAllAccelerometerData();
+                    FileUtil.addNewLogOnSD("Total sent " + dataModels.size() + " items");
                 }
 
                 /**
@@ -88,26 +93,10 @@ public class StoreSensorDataWorker extends Worker implements StoreSensorDataCall
 
             // If there were errors, return FAILURE
             Log.e(TAG, "Error storing sensor data", throwable);
-            return Result.FAILURE;
+            FileUtil.addNewLogOnSD(throwable.getMessage());
+            return Result.RETRY;
         }
     }
-
-    @Override
-    public void onStoreSensorDataSuccessfully(@NotNull String dataId) {
-        //Toast.makeText(getApplicationContext(), "ReMap Data stored: " + dataId, Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "ReMap Data stored: " + dataId);
-        new Thread(()->{
-            //dataService.deleteAllAccelerometerData();
-        }).start();
-    }
-
-    @Override
-    public void onStoreSensorDataFailure(@NotNull String error) {
-        //Toast.makeText(getApplicationContext(), "ReMap error: " + error, Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "ReMap error: " + error);
-    }
-
-
 
 
     /**
@@ -120,18 +109,8 @@ public class StoreSensorDataWorker extends Worker implements StoreSensorDataCall
         // Invoke the History API to fetch the data with the query
         return Fitness.getHistoryClient(ReMapApp.getContext(), GoogleSignIn.getLastSignedInAccount(ReMapApp.getContext()))
                 .readData(readRequest)
-                .addOnSuccessListener(new OnSuccessListener<DataReadResponse>() {
-                            @Override
-                            public void onSuccess(DataReadResponse dataReadResponse) {
-                                getDataFromResult(dataReadResponse);
-                            }
-                        })
-                .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "There was a problem reading the data.", e);
-                            }
-                        });
+                .addOnSuccessListener(dataReadResponse -> getDataFromResult(dataReadResponse))
+                .addOnFailureListener(e -> Log.e(TAG, "There was a problem reading the data.", e));
     }
 
 
@@ -143,7 +122,7 @@ public class StoreSensorDataWorker extends Worker implements StoreSensorDataCall
      *
      * @return
      */
-    public DataReadRequest buildQueryFitnessData() {
+    private DataReadRequest buildQueryFitnessData() {
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
@@ -155,18 +134,15 @@ public class StoreSensorDataWorker extends Worker implements StoreSensorDataCall
         Log.i(TAG, "Range Start: " + dateFormat.format(startTime));
         Log.i(TAG, "Range End: " + dateFormat.format(endTime));
 
-        DataReadRequest readRequest =
-                new DataReadRequest.Builder()
-                        .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
-                        .aggregate(DataType.TYPE_DISTANCE_DELTA, DataType.AGGREGATE_DISTANCE_DELTA)
-                        .bucketByTime(1, TimeUnit.HOURS)
-                        .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                        .build();
-
-        return readRequest;
+        return new DataReadRequest.Builder()
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .aggregate(DataType.TYPE_DISTANCE_DELTA, DataType.AGGREGATE_DISTANCE_DELTA)
+                .bucketByTime(1, TimeUnit.HOURS)
+                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+                .build();
     }
 
-    public void getDataFromResult(DataReadResponse dataReadResult) {
+    private void getDataFromResult(DataReadResponse dataReadResult) {
         if (dataReadResult.getBuckets().size() > 0) {
             Log.i(TAG, "Number of returned buckets of DataSets is: " + dataReadResult.getBuckets().size());
             for (Bucket bucket : dataReadResult.getBuckets()) {
@@ -181,7 +157,6 @@ public class StoreSensorDataWorker extends Worker implements StoreSensorDataCall
                 parseDataFromDataSet(dataSet);
             }
         }
-
     }
 
     private void parseDataFromDataSet(DataSet dataSet) {

@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "135325024643",
-    "firebase_url": "https://remap-12940.firebaseio.com",
-    "project_id": "remap-12940",
-    "storage_bucket": "remap-12940.appspot.com"
+    "project_number": "367266414644",
+    "firebase_url": "https://remapv2-8332d.firebaseio.com",
+    "project_id": "remapv2-8332d",
+    "storage_bucket": "remapv2-8332d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:135325024643:android:2f6e36a26cbe5722",
+        "mobilesdk_app_id": "1:367266414644:android:2f6e36a26cbe5722",
         "android_client_info": {
           "package_name": "com.bodytel.remapv2"
         }
       },
       "oauth_client": [
         {
-          "client_id": "135325024643-176ihc1mngdq1hj2815s3s4i6f5ah3ko.apps.googleusercontent.com",
+          "client_id": "367266414644-sie9g942dejf9eivm9583313s90q8pgj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bodytel.remapv2",
+            "certificate_hash": "55e923c63b611e2254fa6aab0e81a3413fa7cd7c"
+          }
+        },
+        {
+          "client_id": "367266414644-9dsec8rd21iegnrdoussnjhf6mkvns69.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBwbkrFMjuoXhoZFM89KpCUY67WdZuLJLI"
+          "current_key": "AIzaSyAcee_rLPeJcmGlSJeS91QDuNnTe1zT-rs"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367266414644-9dsec8rd21iegnrdoussnjhf6mkvns69.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

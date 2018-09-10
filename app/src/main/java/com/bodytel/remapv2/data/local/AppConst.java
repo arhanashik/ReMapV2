@@ -7,6 +7,7 @@ public interface AppConst {
     int TYPE_AUDIO_SAMPLE = 3;
     int TYPE_ACCELEROMETER_DATA = 4;
 
+    String ROOT = "users";
     String COLLECTION_AUDIO_SAMPLE_DATA = "audio_sample_data";
     String COLLECTION_BDI_SURVEY_DATA = "bdi_survey_data";
     String COLLECTION_SENSOR_DATA = "sensor_data";

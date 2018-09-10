@@ -41,6 +41,28 @@ public class FileUtil {
         }
     }
 
+    public static void addNewLogOnSD(String msg) {
+        try {
+            File root = new File(Environment.getExternalStorageDirectory(), "remapV2");
+            if (!root.exists()) {
+                Log.d("file util", "file not exists: " + "create new");
+                boolean created = root.mkdirs();
+                Log.d("file util", "file not exists: " + "created new: " + created);
+            }
+            File gpxfile = new File(root, "log.txt");
+            FileWriter writer = new FileWriter(gpxfile, true);
+            String strToWrite = "\n---------------\nWorker manager log on: "
+                    + DateFormat.getTimeFormat(ReMapApp.getContext()).format(System.currentTimeMillis())
+                    + "\nMsg: " + msg;
+            writer.append(strToWrite);
+            writer.flush();
+            writer.close();
+            Log.d("file util", "file writer: " + "done: " + gpxfile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Copy file.
      *

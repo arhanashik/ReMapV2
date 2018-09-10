@@ -9,6 +9,8 @@ import com.bodytel.remapv2.data.local.accelerometerdatamodel.AccelerometerDataMo
 import com.bodytel.remapv2.data.local.audiosample.AudioSampleModel;
 import com.bodytel.remapv2.data.local.bdisurveyitem.BdiSurveyResultModel;
 import com.bodytel.remapv2.data.local.moodsurveyitem.MoodSurveyResultModel;
+import com.bodytel.remapv2.data.local.sharedpref.PrefGlobal;
+import com.bodytel.remapv2.data.local.sharedpref.PrefHelper;
 import com.bodytel.remapv2.data.local.sleepsurveyitem.SleepSurveyResultModel;
 import com.bodytel.util.lib.network.callback.DownloadAudioSampleCallBack;
 import com.bodytel.util.lib.network.callback.GetAudioSampleCallBack;
@@ -17,6 +19,7 @@ import com.bodytel.util.lib.network.callback.StoreBdiSurveyCallback;
 import com.bodytel.util.lib.network.callback.StoreMoodSurveyCallback;
 import com.bodytel.util.lib.network.callback.StoreSensorDataCallback;
 import com.bodytel.util.lib.network.callback.StoreSleepSurveyCallback;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -31,16 +34,27 @@ public class FirebaseUtil {
 
     private static FirebaseUtil firebaseUtil = null;
 
-    private FirebaseFirestore firestoreDb;
-    private StorageReference storageReference, fileDb;
+    private static DocumentReference documentReference;
+    private static StorageReference storageReference, fileDb;
 
     private FirebaseUtil(){
 
     }
 
     public void init(){
-        firestoreDb = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
+        PrefGlobal prefGlobal = PrefHelper.providePrefGlobal();
+        if(documentReference == null){
+            documentReference = FirebaseFirestore
+                    .getInstance()
+                    .collection(AppConst.ROOT)
+                    .document(prefGlobal.getSubjectId());
+        }
+        if(storageReference == null){
+            storageReference = FirebaseStorage
+                    .getInstance()
+                    .getReference()
+                    .child(prefGlobal.getSubjectId());
+        }
     }
 
     public static FirebaseUtil on(){
@@ -51,7 +65,7 @@ public class FirebaseUtil {
 
     public void storeAudioSample(String subjectId, String filePath, String fileName, StoreAudioSampleCallback callback){
         Uri fileUri = Uri.fromFile(new File(filePath));
-        fileDb = storageReference.child("audio/" + fileName);
+        fileDb = storageReference.child(fileName);
 
         fileDb.putFile(fileUri)
                 .addOnProgressListener(taskSnapshot -> {
@@ -85,7 +99,7 @@ public class FirebaseUtil {
         Map<String, Object> data = FirebaseMapper.audioSampleModelToMap(sampleModel);
 
         try {
-            firestoreDb.collection(AppConst.COLLECTION_AUDIO_SAMPLE_DATA)
+            documentReference.collection(AppConst.COLLECTION_AUDIO_SAMPLE_DATA)
                     .add(data)
                     .addOnCompleteListener(task -> {
                         sampleModel.setDataId(task.getResult().getId());
@@ -101,15 +115,15 @@ public class FirebaseUtil {
         }
     }
 
-    public void getAudioSampleList(String subjectId, GetAudioSampleCallBack callBack){
+    public void getAudioSampleList(GetAudioSampleCallBack callBack){
         try{
-            firestoreDb.collection(AppConst.COLLECTION_AUDIO_SAMPLE_DATA)
+            documentReference.collection(AppConst.COLLECTION_AUDIO_SAMPLE_DATA)
                     .get()
                     .addOnCompleteListener(task -> {
 
                         if(task.isSuccessful()){
                             List<AudioSampleModel> dataModels = FirebaseMapper
-                                    .sampleModelListFromQuerySnapshot(subjectId, task.getResult());
+                                    .sampleModelListFromQuerySnapshot(task.getResult());
 
                             callBack.onLoadAudioSampleSuccessfully(dataModels);
                         }
@@ -122,8 +136,8 @@ public class FirebaseUtil {
         }
     }
 
-    public void downloadAudioSample(String downloadUrl, String fileName, DownloadAudioSampleCallBack callBack){
-        fileDb = storageReference.child("audio/" + fileName);
+    public void downloadAudioSample(String fileName, DownloadAudioSampleCallBack callBack){
+        fileDb = storageReference.child(fileName);
 
         final File outputDir = Objects.requireNonNull(ReMapApp.getContext().getExternalCacheDir());
 
@@ -146,7 +160,7 @@ public class FirebaseUtil {
 
     public void storeBdiSurveyResult(BdiSurveyResultModel resultModel, StoreBdiSurveyCallback callBack){
         try {
-            firestoreDb.collection(AppConst.COLLECTION_BDI_SURVEY_DATA)
+            documentReference.collection(AppConst.COLLECTION_BDI_SURVEY_DATA)
                     .add(FirebaseMapper.bdiSurveyModelToMap(resultModel))
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -166,10 +180,10 @@ public class FirebaseUtil {
         }
     }
 
-    public void storeSensorData(String subjectId, List<AccelerometerDataModel> dataModels, StoreSensorDataCallback callback){
+    public void storeSensorData(List<AccelerometerDataModel> dataModels, StoreSensorDataCallback callback){
         try {
-            firestoreDb.collection(AppConst.COLLECTION_SENSOR_DATA)
-                    .add(FirebaseMapper.sensorDataToMap(subjectId, dataModels))
+            documentReference.collection(AppConst.COLLECTION_SENSOR_DATA)
+                    .add(FirebaseMapper.sensorDataToMap(dataModels))
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
 
@@ -189,7 +203,7 @@ public class FirebaseUtil {
 
     public void storeSleepSurveyResult(SleepSurveyResultModel resultModel, StoreSleepSurveyCallback callback){
         try {
-            firestoreDb.collection(AppConst.COLLECTION_SLEEP_SURVEY_DATA)
+            documentReference.collection(AppConst.COLLECTION_SLEEP_SURVEY_DATA)
                     .add(FirebaseMapper.sleepSurveyModelToMap(resultModel))
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
@@ -211,7 +225,7 @@ public class FirebaseUtil {
 
     public void storeMoodSurveyResult(MoodSurveyResultModel resultModel, StoreMoodSurveyCallback callback){
         try {
-            firestoreDb.collection(AppConst.COLLECTION_SLEEP_SURVEY_DATA)
+            documentReference.collection(AppConst.COLLECTION_SLEEP_SURVEY_DATA)
                     .add(FirebaseMapper.moodSurveyModelToMap(resultModel))
                     .addOnSuccessListener(documentReference -> {
                         Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());

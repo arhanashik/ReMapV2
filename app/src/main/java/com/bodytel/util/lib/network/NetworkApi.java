@@ -28,20 +28,20 @@ public class NetworkApi {
         FirebaseUtil.on().storeAudioSample(subjectId, filePath, fileName, callback);
     }
 
-    public void getAudioSample(String subjectId, GetAudioSampleCallBack callback){
-        FirebaseUtil.on().getAudioSampleList(subjectId, callback);
+    public void getAudioSample(GetAudioSampleCallBack callback){
+        FirebaseUtil.on().getAudioSampleList(callback);
     }
 
-    public void downloadAudioSample(String downloadUrl, String fileName, DownloadAudioSampleCallBack callback){
-        FirebaseUtil.on().downloadAudioSample(downloadUrl, fileName, callback);
+    public void downloadAudioSample(String fileName, DownloadAudioSampleCallBack callback){
+        FirebaseUtil.on().downloadAudioSample(fileName, callback);
     }
 
     public void storeBdiSurveyData(BdiSurveyResultModel resultModel, StoreBdiSurveyCallback callBack){
         FirebaseUtil.on().storeBdiSurveyResult(resultModel, callBack);
     }
 
-    public void storeSensorData(String subjectId, List<AccelerometerDataModel> dataModels, StoreSensorDataCallback callback){
-        FirebaseUtil.on().storeSensorData(subjectId, dataModels, callback);
+    public void storeSensorData(List<AccelerometerDataModel> dataModels, StoreSensorDataCallback callback){
+        FirebaseUtil.on().storeSensorData(dataModels, callback);
     }
 
     public void storeSleepSurveyData(SleepSurveyResultModel resultModel, StoreSleepSurveyCallback callback){
