@@ -43,7 +43,7 @@ public class FitDataCollectorWorker extends Worker {
             DataReadRequest readRequest = buildQueryFitnessData();
 
             // Invoke the History API to fetch the data with the query
-            Fitness.getHistoryClient(ReMapApp.getContext(), GoogleSignIn.getLastSignedInAccount(ReMapApp.getContext()))
+            Fitness.getHistoryClient(ReMapApp.getContext(), GoogleSignIn.getLastSignedInAccount(getApplicationContext()))
                     .readData(readRequest)
                     .addOnSuccessListener(this::getDataFromResult)
                     .addOnFailureListener(e -> Log.e(TAG, "There was a problem reading the data.", e));
@@ -97,7 +97,8 @@ public class FitDataCollectorWorker extends Worker {
     }
 
     private void parseDataFromDataSet(DataSet dataSet) {
-        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName()
+                + ", total data point: " + dataSet.getDataPoints().size());
 
         if(fitDataModelService == null) {
             fitDataModelService = DatabaseHelper.provideFitDataModelService();
@@ -126,7 +127,8 @@ public class FitDataCollectorWorker extends Worker {
                 }
             }
 
-            fitDataModelService.insert(model);
+            long insertId = fitDataModelService.insert(model);
+            Log.i(TAG, "Inserted" + insertId);
         }
     }
 }

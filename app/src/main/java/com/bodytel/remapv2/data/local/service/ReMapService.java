@@ -112,39 +112,36 @@ public class ReMapService extends Service implements SensorEventListener {
 
 
     private void calculateMin() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //Log.e("SensorActivity","Min X ="+totalX/itemCount+" Min Y ="+totalY/itemCount+" Min Z ="+totalZ/itemCount);
+        handler.postDelayed(() -> {
+            //Log.e("SensorActivity","Min X ="+totalX/itemCount+" Min Y ="+totalY/itemCount+" Min Z ="+totalZ/itemCount);
 
-                long time = System.currentTimeMillis();
-                float X = NumberUtil.floorToOneDecimalPoint(totalX / itemCount);
-                float Y = NumberUtil.floorToOneDecimalPoint(totalY / itemCount);
-                float Z = NumberUtil.floorToOneDecimalPoint(totalZ / itemCount);
+            long time = System.currentTimeMillis();
+            float X = NumberUtil.floorToOneDecimalPoint(totalX / itemCount);
+            float Y = NumberUtil.floorToOneDecimalPoint(totalY / itemCount);
+            float Z = NumberUtil.floorToOneDecimalPoint(totalZ / itemCount);
 
-                if (lastX != X || lastY != Y || lastZ != Z) {
-                    AccelerometerDataModel model = new AccelerometerDataModel(
-                            time,
-                            X,
-                            Y,
-                            Z,
-                            false
-                    );
-                    accelerometerDataService.insert(model);
-                    lastX = X;
-                    lastY = Y;
-                    lastZ = Z;
+            if (lastX != X || lastY != Y || lastZ != Z) {
+                AccelerometerDataModel model = new AccelerometerDataModel(
+                        time,
+                        X,
+                        Y,
+                        Z,
+                        false
+                );
+                accelerometerDataService.insert(model);
+                lastX = X;
+                lastY = Y;
+                lastZ = Z;
 
-                    String value = "(" + model.getXMean() + ", " + model.getYMean() + ", " + model.getZMean() + ")";
-                    Log.e("ReMapService", "Time =" + time + " value =" + value);
-                }
-
-                totalX = 0.0f;
-                totalY = 0.0f;
-                totalZ = 0.0f;
-                itemCount = 0.0f;
-                calculateMin();
+                String value = "(" + model.getXMean() + ", " + model.getYMean() + ", " + model.getZMean() + ")";
+                Log.e("ReMapService", "Time =" + time + " value =" + value);
             }
+
+            totalX = 0.0f;
+            totalY = 0.0f;
+            totalZ = 0.0f;
+            itemCount = 0.0f;
+            calculateMin();
         }, 1000);
     }
 
